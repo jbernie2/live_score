@@ -1,11 +1,6 @@
 vextab = require("vextab");
 live_score = {};
 
-live_score.test = function(){
-  console.log(Vex.Flow.RESOLUTION);
-}();
-
-
 live_score.Score_editor = function(score_editior_div){
   this.ui = new live_score.Ui(this,score_editor_div);
   this.gs = new live_score.Graphical_state();
