@@ -18,11 +18,11 @@ rendering API.
 
 ## Developing live_score
 
-  1. Clone this repo:
+Clone this repo:
 
     $ git clone https://github.com/jbernie2/live_score.git
 
-  2. Install dependencies via NPM:
+Install dependencies via NPM:
 
     $ cd live_score
     $ npm install
