@@ -13,7 +13,7 @@ live_score.Musical_state.prototype.add_staves(stave_options){
 
 live_score.Musical_state.prototype.add_measures(num_measures,measure_options){
    for(var i = 0; i < num_measures; i++){
-    this.staves.add_measures(measure_options);
+    this.staves[i].add_measures(measure_options);
   }
 };
 
