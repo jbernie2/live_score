@@ -1,3 +1,4 @@
+live_score = require("./live_score.js");
 
 live_score.Ui = function(event_controller, score_editor_div){
   this.event_controller = event_controller;

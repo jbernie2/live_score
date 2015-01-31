@@ -1,3 +1,6 @@
+live_score = require("./live_score.js");
+live_score = require("./measure.js");
+
 live_score.Voice = function(measure_meta_data){
   this.measures_info = measures_info;
   this.measures = [];

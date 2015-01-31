@@ -43,7 +43,7 @@ module.exports = function(grunt) {
           banner: BANNER,
           browserifyOptions: {
             debug: true,
-            standalone: "liveScore"
+            standalone: "live_score"
           }
         },
         files: [

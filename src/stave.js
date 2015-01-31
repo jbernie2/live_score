@@ -1,3 +1,6 @@
+live_score = require("./live_score.js");
+live_score = require("./voice.js");
+
 live_score.Stave = function(stave_options){
   this.clef = stave_options.clef;
   this.voices = [];
