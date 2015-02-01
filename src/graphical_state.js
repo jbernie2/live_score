@@ -16,3 +16,5 @@ live_score.Graphical_object = function(start_x,end_x,start_y,end_y){
 live_score.Graphical_object.prototype.contains_coordinates = function(x,y){
 
 };
+
+module.exports = live_score.Graphical_state;

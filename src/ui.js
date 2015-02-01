@@ -7,10 +7,12 @@ live_score.Ui = function(event_controller, score_editor_div){
 };
 
 live_score.Ui.prototype.initialize_ui_panels = function(){
-  initialize_score_panel();
+  this.initialize_score_panel();
 };
 
 live_score.Ui.prototype.initialize_score_panel = function(){
   this.score_panel = document.createElement('canvas');
   this.score_panel.id = 'score_panel';
 };
+
+module.exports = live_score.Ui;

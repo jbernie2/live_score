@@ -6,3 +6,4 @@ live_score.Note = function(pitch,length,type){
   this.type = type;
 };
 
+module.exports = live_score.Note;

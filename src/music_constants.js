@@ -11,3 +11,4 @@ live_score.note_lengths = {
 
 live_score.rest_pitch = "d/5";
 live_score.rest_type = "r";
+

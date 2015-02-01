@@ -1,5 +1,5 @@
-live_score = require("./live_score.js");
-live_score = require("./voice.js");
+live_score       = require("./live_score.js");
+live_score.Voice = require("./voice.js");
 
 live_score.Stave = function(stave_options){
   this.clef = stave_options.clef;
@@ -18,7 +18,7 @@ live_score.Stave.prototype.add_measures = function(num_measures,
   }
   else{
     for(var i = 0; i < voices.lengths; i++){
-      this.voices.add_measures(num_measures,measure_options);
+      this.voices[i].add_measures(num_measures,measure_options);
     }
   }
 };
@@ -43,3 +43,5 @@ live_score.Stave.prototype.add_measure_meta_data = function(num_measures,
     this.measure_meta_data.push(measure_options);
   }
 };
+
+module.exports = live_score.Stave;
