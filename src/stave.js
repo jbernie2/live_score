@@ -44,4 +44,18 @@ live_score.Stave.prototype.add_measure_meta_data = function(num_measures,
   }
 };
 
+live_score.Stave.prototype.get_total_num_beats = function(){
+
+  var total_beats = 0;
+  for(var i = 0; i < this.measure_meta_data.length; i++){
+    var num_beats = this.measure_meta_data[i].num_beats;
+    var beat_value = this.measure_meta_data[i].beat_value;
+
+    total_beats += (num_beats * (live_score.note_lengths.quarter/beat_value));
+  }
+  total_beats = Math.ceil(total_beats);
+
+  return total_beats;
+};
+
 module.exports = live_score.Stave;

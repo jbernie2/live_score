@@ -3,9 +3,8 @@ live_score.Stave = require("./stave.js");
 
 live_score.Musical_state = function(){
   this.staves = [];
-  this.add_staves([{clef:"treble"}]);
-  this.add_measures(4,{num_beats:4, beat_value:4});
 };
+
 
 live_score.Musical_state.prototype.add_staves = function(stave_options){
   for(var i = 0; i < stave_options.length; i++){
