@@ -17,6 +17,8 @@ live_score.Renderer.prototype.render_score = function(staves){
     var vexflow_voice = this.render_voices(staves[i].get_total_num_beats(),
       staves[i].voices);
 
+    vexflow_stave.setContext(this.score_panel_context);
+    vexflow_stave.draw();
     vexflow_voice.draw(this.score_panel_context,vexflow_stave);
   }
 };

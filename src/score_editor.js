@@ -4,8 +4,8 @@ live_score.Graphical_state = require("./graphical_state.js");
 live_score.Musical_state   = require("./musical_state.js");
 live_score.Renderer        = require("./renderer.js");
 
-live_score.Score_editor = function(score_editor_div){
-  this.ui = new live_score.Ui(this,score_editor_div);
+live_score.Score_editor = function(score_editor_div_id){
+  this.ui = new live_score.Ui(this,score_editor_div_id);
   this.gs = new live_score.Graphical_state();
   this.ms = new live_score.Musical_state();
   this.renderer = new live_score.Renderer(this.ui.score_panel);

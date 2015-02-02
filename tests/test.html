@@ -3,15 +3,11 @@
    <script src='../build/live_score-debug.js'></script>
   </head>
   <body>
-    <p>number of measures: <input id="measure_input" type="text" name="measures" size="1"> </p>
-    <p><button id='render_button'> render </button> </p>
-    <canvas id="score_panel" width="700" height="100"></canvas>
-
+    <div id="live_score_main_panel"> </div>
   </body>
   <script type="text/javascript">
     window.onload = function(){
-      var score_editor_div = document.getElementById("score_panel");
-      var score_editor = new live_score.Score_editor(score_editor_div);
+      var score_editor = new live_score.Score_editor("live_score_main_panel");
     };
   </script>
 </html>

@@ -1,4 +1,4 @@
-vextab = require("vextab");
+Vex = require("vexflow");
 live_score = {};
 live_score.Score_editor = require("./score_editor.js");
 
