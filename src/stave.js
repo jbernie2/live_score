@@ -4,6 +4,7 @@ live_score.Voice = require("./voice.js");
 live_score.Stave = function(stave_options){
   this.clef = stave_options.clef;
   this.voices = [];
+  this.barline_voice = undefined;
   this.measure_meta_data = [];
 };
 
@@ -20,6 +21,12 @@ live_score.Stave.prototype.add_measures = function(num_measures,
     for(var i = 0; i < voices.lengths; i++){
       this.voices[i].add_measures(num_measures,measure_options);
     }
+  }
+  
+  if(!this.barline_voice){
+    this.barline_voice = new live_score.Voice(this.measure_meta_data);
+  }else{
+    this.barline_voice.add_measures(num_measures,measure_options);
   }
 };
 
