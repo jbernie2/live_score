@@ -1,12 +1,49 @@
 live_score = require("./live_score.js");
 
+/**
+* live_score.Renderer
+*   converts the information in live_score.Musical_state into Vexflow objects
+*   allowing the information to be displayed as a score
+*/
+
+
+/**
+* Renderer
+*   Constructor for the Renderer Object
+* args
+*   score_panel
+*     the html canvas element on which the rendered score is displayed
+* returns
+*   none
+*/
 live_score.Renderer = function(score_panel){
+
+  /**
+  * the html canvas element on which the score is rendered
+  */
   this.score_panel = score_panel;
+
+  /**
+  * vexflow renderer, used to get the vexflow canvas context
+  */
   this.vexflow_renderer = new Vex.Flow.Renderer(score_panel,
     Vex.Flow.Renderer.Backends.CANVAS);
+
+  /**
+  * vexflow renderer context, needed to render the score
+  */
   this.score_panel_context = this.vexflow_renderer.getContext();
 };
 
+/**
+* render_score
+*   creates/renders the staves and voices of the score
+* args
+*   staves
+*     an array of live_score.Stave passed in from the Musical_state object
+* returns
+*   none
+*/
 live_score.Renderer.prototype.render_score = function(staves){
 
   for(var i = 0; i < staves.length; i++){
@@ -26,6 +63,22 @@ live_score.Renderer.prototype.render_score = function(staves){
   }
 };
 
+/**
+* render_voices
+*   converts live_score voices into vexflow voices
+* args
+*   total_num_beats
+*     the total number of beats in the entire score for one voice, used to
+*     create the vexflow voice
+*   voices
+*     an array of the live_score voices
+*   barline_voice
+*     MAY BE REMOVED, a voice used solely for rendering barlines in the correct
+*     places
+* returns
+*   vexflow_voices
+*     an array of formatted and aligned vexflow voices
+*/
 live_score.Renderer.prototype.render_voices = function(total_num_beats,voices,
   barline_voice){
 
@@ -36,26 +89,48 @@ live_score.Renderer.prototype.render_voices = function(total_num_beats,voices,
     vexflow_voice.addTickables(vexflow_notes);
     vexflow_voices.push(vexflow_voice);
   }
-
+  /*
   var vexflow_barline_voice = this.create_vexflow_voice(total_num_beats);
   var barlines = this.render_barlines(barline_voice.measures);
   vexflow_barline_voice.addTickables(barlines);
   vexflow_voices.push(vexflow_barline_voice);
-
+  */
   var formatter = new Vex.Flow.Formatter().joinVoices(vexflow_voices).
     format(vexflow_voices, 500);
 
   return vexflow_voices;
 };
 
+/**
+* render_measures
+*   concats all notes for every measure into one array vexflow notes
+* args
+*   measures
+*     an array of live_score measures
+* returns
+*   vexflow_notes
+*     an array of all notes played in the score separated into measures by 
+*     barlines
+*/
 live_score.Renderer.prototype.render_measures = function(measures){
   var vexflow_notes = [];
   for(var i = 0; i < measures.length; i++){
     vexflow_notes = vexflow_notes.concat(this.render_notes(measures[i].notes));
+    vexflow_notes.push(new Vex.Flow.BarNote());
   }
   return vexflow_notes;
 };
 
+/**
+* render_barlines MAY BE REMOVED
+*   renders the barline voice
+* args
+*   measures
+*     an array of live_score measures
+* returns
+*   vexflow_notes
+*     an array of rests and barlines representing the measures of the score
+*/
 live_score.Renderer.prototype.render_barlines = function(measures){
   var vexflow_notes = [];
   for(var i = 0; i < measures.length; i++){
@@ -65,6 +140,16 @@ live_score.Renderer.prototype.render_barlines = function(measures){
   return vexflow_notes;
 };
 
+/**
+* render_notes
+*   converts each measure's notes into arrays of vexflow notes
+* args
+*   notes
+*     an array of live_score notes
+* returns
+*   vexflow_notes
+*     an array of all the notes played in a measure
+*/
 live_score.Renderer.prototype.render_notes = function(notes){
   var vexflow_notes = [];
   for(var i = 0; i < notes.length; i++){
@@ -73,6 +158,16 @@ live_score.Renderer.prototype.render_notes = function(notes){
   return vexflow_notes;
 };
 
+/**
+* create_vex_flow_voice
+*   does the actual conversion between a live_score voice and a vexflow voice
+* args
+*   total_num_beats
+*     the total number of beats in the entire score
+* returns
+*   new Vex.Flow.Voice
+*     vexflow voice with properties parallel to the live_score voice
+*/
 live_score.Renderer.prototype.create_vexflow_voice = function(total_num_beats){
   return new Vex.Flow.Voice({
     num_beats: total_num_beats,
@@ -81,6 +176,17 @@ live_score.Renderer.prototype.create_vexflow_voice = function(total_num_beats){
   });
 };
 
+/**
+* create_vex_flow_note
+*   does the actual conversion between a live_score note and a vexflow note
+* args
+*   note
+*     live_score note
+* returns
+*   vexflow
+*     vexflow note with properties parallel to the live_score note, with some
+*     exceptions for notes that overlap notes.
+*/
 live_score.Renderer.prototype.create_vexflow_note = function(note){
   var length = note.length.toString();
   var pitch = note.pitch;

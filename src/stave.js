@@ -1,13 +1,51 @@
 live_score       = require("./live_score.js");
 live_score.Voice = require("./voice.js");
 
+/**
+* Stave
+*   Constructor
+* args
+*   stave_options
+*     configuration options for creating a stave, currently just the clef type
+* returns
+*   none
+*/
 live_score.Stave = function(stave_options){
+ 
+  /**
+  * the type of clef that will be used by the stave
+  */
   this.clef = stave_options.clef;
+
+  /**
+  * an array of the voices contained in the stave
+  */
   this.voices = [];
+
+  /**
+  * a special voice used to render barlines between measures MAY BE REMOVED
+  */
   this.barline_voice = undefined;
+
+  /**
+  * a list of all the measure_options ordered chronologically,
+  * this is maintained at the stave level, so that all voices reference the
+  * same time signature information
+  */
   this.measure_meta_data = [];
 };
 
+/**
+* add_measures
+*   adds measures to a stave, adds measures to every voice in the stave
+* args
+*   num_measures
+*     the number of measures to add
+*   measure_options
+*     time signature information about the measures being added
+* returns
+*   none
+*/
 live_score.Stave.prototype.add_measures = function(num_measures,
   measure_options){
   
@@ -30,6 +68,15 @@ live_score.Stave.prototype.add_measures = function(num_measures,
   }
 };
 
+/**
+* add_measures
+*   adds_measures to the score
+* args
+*   event_info
+*     information about the ui event, will be interpreted by Graphical_state
+* returns
+*   none
+*/
 live_score.Stave.prototype.add_note = function(note_info){
   var note_added = false;
   var current_voice = 0;
@@ -44,6 +91,17 @@ live_score.Stave.prototype.add_note = function(note_info){
   }
 };
 
+/**
+* add_measure_meta_data
+*   adds time signature information about new measures to the measure meta data
+* args
+*   num_measures
+*     number of measures being added
+*   measure_options
+*     time signature information for the measures being added 
+* returns
+*   none
+*/
 live_score.Stave.prototype.add_measure_meta_data = function(num_measures,
   measure_options){
   for(var i = 0; i < num_measures; i++){
@@ -51,6 +109,16 @@ live_score.Stave.prototype.add_measure_meta_data = function(num_measures,
   }
 };
 
+/**
+* get_total_num_beats
+*   calculates the total number of beats (in terms of whole quarter note beats, 
+*   rounded up) for the entire stave
+* args
+*   none
+* returns
+*   total_num_beats
+*     the total number of quarter note beats in the stave
+*/
 live_score.Stave.prototype.get_total_num_beats = function(){
 
   var total_beats = 0;
