@@ -29,36 +29,13 @@ live_score.Ui = function(event_controller, score_editor_div_id){
   */
   this.score_editor_div = document.getElementById(score_editor_div_id);
 
-  this.initialize_ui_panels();
+  this.score_panel = new live_score.Score_panel(event_controller);
+  this.score_panel.attach_score_panel(this.score_editor_div);
+
 };
 
-/**
-* initialize_ui_panels
-*   creates all the Ui elements
-* args
-*   none
-* returns
-*   none
-*/
-live_score.Ui.prototype.initialize_ui_panels = function(){
-  this.initialize_score_panel();
-};
-
-/**
-* initialize_score_panel
-*   creates all the score panel, the ui element in which the score is drawn
-* args
-*   none
-* returns
-*   none
-*/
-live_score.Ui.prototype.initialize_score_panel = function(){
-  this.score_panel = document.createElement('canvas');
-  this.score_panel.id = 'score_panel';
-  this.score_panel.width = 1000;
-  this.score_panel.height = 500;
-
-  this.score_editor_div.appendChild(this.score_panel);
+live_score.Ui.prototype.get_score_panel = function(){
+  return this.score_panel.score_canvas;
 };
 
 module.exports = live_score.Ui;

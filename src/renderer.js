@@ -33,6 +33,23 @@ live_score.Renderer = function(score_panel){
   * vexflow renderer context, needed to render the score
   */
   this.score_panel_context = this.vexflow_renderer.getContext();
+
+  this.vexflow_staves = [];
+
+  this.vexflow_voices_list = [];
+};
+
+live_score.Renderer.prototype.display_score = function(staves){
+  
+  for(var i = 0; i < this.vexflow_staves.length; i++){
+    var vexflow_stave = this.vexflow_staves[i];
+    var vexflow_voices = this.vexflow_voices_list[i];
+    
+    vexflow_stave.draw();
+    for(var j = 0; j < vexflow_voices.length; j++){
+      vexflow_voices[j].draw(this.score_panel_context,vexflow_stave);
+    }
+  }
 };
 
 /**
@@ -46,8 +63,11 @@ live_score.Renderer = function(score_panel){
 */
 live_score.Renderer.prototype.render_score = function(staves){
 
+  this.vexflow_staves = [];
+  this.vexflow_voices_list = [];
+
   for(var i = 0; i < staves.length; i++){
-    
+ 
     var vexflow_stave = new Vex.Flow.Stave(10,0,2000);
     vexflow_stave.addClef(staves[i].clef);
 
@@ -55,11 +75,9 @@ live_score.Renderer.prototype.render_score = function(staves){
       staves[i].voices,staves[i].barline_voice);
 
     vexflow_stave.setContext(this.score_panel_context);
-    vexflow_stave.draw();
-
-    for(var j = 0; j < vexflow_voices.length; j++){
-      vexflow_voices[j].draw(this.score_panel_context,vexflow_stave);
-    }
+    
+    this.vexflow_staves.push(vexflow_stave);
+    this.vexflow_voices_list.push(vexflow_voices);
   }
 };
 
@@ -197,6 +215,14 @@ live_score.Renderer.prototype.create_vexflow_note = function(note){
   
   var vexflow_note = new Vex.Flow.StaveNote({keys: pitch, duration: length});
   return vexflow_note;
+};
+
+live_score.Renderer.prototype.get_staves = function(){
+  return this.vexflow_staves;
+};
+
+live_score.Renderer.prototype.get_voices = function(){
+  return this.vexflow_voices_list;
 };
 
 module.exports = live_score.Renderer;

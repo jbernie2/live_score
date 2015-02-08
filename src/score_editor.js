@@ -36,12 +36,25 @@ live_score.Score_editor = function(score_editor_div_id){
   /**
   * Converts the musical representation of the score into a vexflow score
   */
-  this.renderer = new live_score.Renderer(this.ui.score_panel);
+  this.renderer = new live_score.Renderer(this.ui.get_score_panel());
 
-  //TEST CODE
-  this.add_staves(null);
-  this.add_measures(null);
-  this.TEST_RENDER(null);
+  this.create_empty_score();
+};
+
+live_score.Score_editor.prototype.create_empty_score = function(){
+  
+  var stave_options = [{clef:"treble"}];
+  this.ms.add_staves(stave_options);
+  
+  var num_measures = 4;
+  var measure_options = {num_beats:4, beat_value:4};
+  this.ms.add_measures(num_measures,measure_options);
+  
+  this.renderer.render_score(this.ms.staves);
+  
+  this.gs.update(this.renderer);
+  
+  this.renderer.display_score();
 };
 
 /**
@@ -83,15 +96,11 @@ live_score.Score_editor.prototype.add_measures = function(event_info){
 *   none
 */
 live_score.Score_editor.prototype.add_note = function(event_info){
+
   var note_info = this.gs.get_score_position(event_info);
   var staves = this.ms.add_note(note_info);
   var score = this.renderer.render_score(staves);
   this.gs.update(score);
-};
-
-
-live_score.Score_editor.prototype.TEST_RENDER = function(event_info){
-  this.renderer.render_score(this.ms.staves);
 };
 
 module.exports = live_score.Score_editor;
