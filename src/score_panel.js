@@ -57,7 +57,8 @@ live_score.Score_panel.prototype.get_click_position = function(){
       //This would be which options are currently being used, including the
       //note length that is being selected and whatever else
       //event_info.ui_state = ui_state;
-      event_info.note_length = live_score.quarter;
+      event_info.note_length = live_score.note_lengths.quarter;
+      event_info.quantize = live_score.note_lengths.quarter; 
       event_controller.add_note(event_info);
    };
 };

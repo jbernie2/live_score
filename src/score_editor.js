@@ -87,7 +87,7 @@ live_score.Score_editor.prototype.add_measures = function(event_info){
 };
 
 /**
-* add_notes
+* add_note
 *   adds notes to the score
 * args
 *   event_info
@@ -96,11 +96,11 @@ live_score.Score_editor.prototype.add_measures = function(event_info){
 *   none
 */
 live_score.Score_editor.prototype.add_note = function(event_info){
-
-  var note_info = this.gs.get_score_position(event_info);
+  var note_info = this.gs.get_new_note_position(event_info);
   var staves = this.ms.add_note(note_info);
-  var score = this.renderer.render_score(staves);
-  this.gs.update(score);
+  this.renderer.render_score(staves);
+  this.gs.update(this.renderer);
+  this.renderer.display_score();
 };
 
 module.exports = live_score.Score_editor;

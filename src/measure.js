@@ -78,4 +78,9 @@ live_score.Measure.prototype.optimal_rest_length = function(remaining_beats){
   return best_fit_note;
 };
 
+live_score.Measure.prototype.add_note = function(note_info){
+  
+  
+};
+
 module.exports = live_score.Measure;

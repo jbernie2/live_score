@@ -23,19 +23,38 @@ live_score.Graphical_object = function(start_x,end_x,start_y,end_y){
 };
 
 /**
-* contains_coordinates
-*   determines if a given x,y pair of coordinates are within the bounds of a
-*   graphical object
+* intersects_area
+*   determines if another graphical_object intersects with this 
+*   graphical_object
 * args
-*   x
-*     the x position of the point being checked
-*   y
-*     the y position of the point being checked
+*   graphical_object
+*     the area being checked against the area of this graphical_object
 * returns
-*   TBD
+*   intersects
+*     either true or false, whehter the two areas overlap
 */
-live_score.Graphical_object.prototype.contains_coordinates = function(x,y){
+live_score.Graphical_object.prototype.intersects_area = function(
+  graphical_object){
+  
+  var intersects = false;
+  intersects = intersects || this.contains_point(graphical_object.start_x,
+                                                 graphical_object.start_y);
+  intersects = intersects || this.contains_point(graphical_object.end_x,
+                                                 graphical_object.start_y);
+  intersects = intersects || this.contains_point(graphical_object.start_x,
+                                                 graphical_object.end_y);
+  intersects = intersects || this.contains_point(graphical_object.end_x,
+                                                 graphical_object.end_y);
+  return intersects;
+};
 
+live_score.Graphical_object.prototype.contains_point = function(x,y){
+  var contains = true;
+  contains = contains && (this.start_x < x);
+  contains = contains && (this.end_x > x);
+  contains = contains && (this.start_y < y);
+  contains = contains && (this.end_y > y);
+  return contains;
 };
 
 module.exports = live_score.Graphical_object;

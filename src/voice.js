@@ -42,4 +42,8 @@ live_score.Voice.prototype.create_empty_voice = function(){
   }
 };
 
+live_score.Voice.prototype.add_note = function(note_info){
+  return this.measures[note_info.measure_num].add_note(note_info);
+};
+
 module.exports = live_score.Voice;

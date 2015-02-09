@@ -127,12 +127,72 @@ live_score.Graphical_state.prototype.add_stave = function(stave_object){
   stave_area.end_x = stave_object.bounds.x + stave_object.bounds.w;
   stave_area.start_y = stave_object.bounds.y;
   stave_area.end_y = stave_object.bounds.y + stave_object.height;
+  stave_area.space_between_notes = stave_object.getSpacingBetweenLines()/2;
 
   this.staves.push(stave_area);
 };
 
+live_score.Graphical_state.prototype.lookup_note = function(position){
+  var note_found = false;
+  for(var i = 0; i < this.notes.length && !note_found; i++){
+    note_found = this.notes[i].intersects_area(position);
+  }
+  return note_found;
+};
+
+live_score.Graphical_state.prototype.lookup_measure = function(position){
+  var measure_found = false;
+  for(var i = 0; i < this.measures.length && !measure_found; i++){
+    measure_found = this.measures[i].intersects_area(position);
+  }
+  return i-1;
+};
+
+live_score.Graphical_state.prototype.lookup_stave = function(position){
+  var stave_found = false;
+  for(var i = 0; i < this.staves.length && !stave_found; i++){
+    stave_found = this.staves[i].intersects_area(position);
+  }
+  return i-1;
+};
+
+live_score.Graphical_state.prototype.get_measure_position = 
+  function(measure_num,position){
+  var containing_measure = this.measures[measure_num];
+  var measure_length = containing_measure.end_x - containing_measure.start_x;
+  var position_in_measure = position.start_x - containing_measure.start_x;
+  var fractional_x_position = position_in_measure/measure_length;
+  return fractional_x_position;
+};
+
+live_score.Graphical_state.prototype.get_note_position = 
+  function(stave_num,position){
+  var containing_stave = this.staves[stave_num];
+  var y_position_in_stave =  position.start_y - containing_stave.start_y;
+  var note_distance_from_top = y_position_in_stave/
+    containing_stave.space_between_notes;
+  note_distance_from_top = Math.round(note_distance_from_top);
+  return note_distance_from_top;
+};
+
 live_score.Graphical_state.prototype.get_score_position = function(event_info){
 
+};
+
+live_score.Graphical_state.prototype.get_new_note_position = function(
+  event_info){
+  
+  var click_area = event_info.graphical_object;
+  var note_info = {};
+  note_info.stave_num = this.lookup_stave(click_area);
+  note_info.measure_num = this.lookup_measure(click_area);
+  note_info.x_posiiton = this.get_measure_position(click_info.measure_num,
+    click_area);
+  note_info.y_position = this.get_note_position(click_info.stave_num,
+    click_area);
+  note_info.note_length = event_info.note_length;
+
+  return click_info;
 };
 
 module.exports = live_score.Graphical_state;
