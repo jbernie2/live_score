@@ -79,7 +79,7 @@ live_score.Measure.prototype.optimal_rest_length = function(remaining_beats){
 };
 
 live_score.Measure.prototype.add_note = function(note_info){
-  
+ 
   
 };
 

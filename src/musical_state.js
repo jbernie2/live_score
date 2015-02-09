@@ -56,5 +56,6 @@ live_score.Musical_state.prototype.add_measures = function(num_measures,
 
 live_score.Musical_state.prototype.add_note = function(note_info){
   this.staves[note_info.stave_num].add_note(note_info);
+  return this.staves;
 };
 module.exports = live_score.Musical_state;
