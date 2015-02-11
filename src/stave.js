@@ -80,9 +80,8 @@ live_score.Stave.prototype.add_measures = function(num_measures,
 live_score.Stave.prototype.add_note = function(note_info){
   note_info.pitch = this.get_pitch_from_note_position(note_info.y_position);
   var note_added = false;
-  var current_voice = 0;
   for(var i = 0; i < this.voices.length && !note_added; i++){
-    note_added = this.voices[current_voice].add_note(note_info);
+    note_added = this.voices[i].add_note(note_info);
   }
   if(!note_added){
     var new_voice = new live_score.Voice(this.measure_meta_data);

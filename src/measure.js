@@ -81,6 +81,7 @@ live_score.Measure.prototype.optimal_rest_length = function(remaining_beats){
 live_score.Measure.prototype.add_note = function(note_info){
   var pitch = note_info.pitch;
   var position = this.quantize_rhythm(note_info.quantize,note_info.x_position);
+  return true;
 };
 
 live_score.Measure.prototype.quantize_rhythm = function(quantize,position){
