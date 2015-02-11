@@ -79,8 +79,51 @@ live_score.Measure.prototype.optimal_rest_length = function(remaining_beats){
 };
 
 live_score.Measure.prototype.add_note = function(note_info){
- 
+  var pitch = note_info.pitch;
+  var position = this.quantize_rhythm(note_info.quantize,note_info.x_position);
+};
+
+live_score.Measure.prototype.quantize_rhythm = function(quantize,position){
+  var num_quantized_beats = (this.num_beats / this.beat_value) * quantize;
+  var beat_position = num_quantized_beats * position;
+  var quantized_position;
+
+  if(beat_position > Math.floor(num_quantized_beats)){
+    quantized_position = this.quantize_to_partial_beat(num_quantized_beats,
+      beat_position);
+  }else{
+    quantized_position = this.quantize_to_full_beat(beat_position);
+  }
+  return quantized_position;
+};
+
+live_score.Measure.prototype.quantize_to_partial_beat = function(
+  num_quantized_beats,beat_position){
   
+  var quantized_position;
+  var quantize_left_shift = beat_position - Math.floor(num_quantized_beats);
+  var quantize_right_shift = num_quantized_beats - beat_position;
+  
+  if(quantize_left_shift < quantize_right_shift){
+    quantized_position = Math.floor(num_quantized_beats);
+  }else{
+    quantized_position = num_quantized_beats;
+  }
+  return quantized_position;
+};
+
+live_score.Measure.prototype.quantize_to_full_beat = function(beat_position){
+  
+  var quantized_position;
+  var quantize_left_shift = beat_position - Math.floor(beat_position);
+  var quantize_right_shift = Math.ceil(beat_position) - beat_position;
+
+  if(quantize_left_shift < quantize_right_shift){
+    quantized_position = Math.floor(beat_position);
+  }else{
+    quantized_position = Math.ceil(beat_position);
+  }
+  return quantized_position;
 };
 
 module.exports = live_score.Measure;

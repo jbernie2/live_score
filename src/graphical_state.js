@@ -186,11 +186,12 @@ live_score.Graphical_state.prototype.get_new_note_position = function(
   var note_info = {};
   note_info.stave_num = this.lookup_stave(click_area);
   note_info.measure_num = this.lookup_measure(click_area);
-  note_info.x_posiiton = this.get_measure_position(note_info.measure_num,
+  note_info.x_position = this.get_measure_position(note_info.measure_num,
     click_area);
   note_info.y_position = this.get_note_position(note_info.stave_num,
     click_area);
   note_info.note_length = event_info.note_length;
+  note_info.quantize = event_info.quantize;
 
   return note_info;
 };

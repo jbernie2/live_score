@@ -16,6 +16,8 @@ live_score.Renderer        = require("./renderer.js");
 */
 live_score.Score_editor = function(score_editor_div_id){
  
+  live_score.init_constants();
+
   /**
   * catches all valid UI interactions and calls the appropriate Score_editor
   * function

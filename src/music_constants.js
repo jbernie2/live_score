@@ -1,5 +1,9 @@
 live_score = require("./live_score.js");
 
+live_score.init_constants = function(){
+  live_score.set_note_length_lcm();
+};
+
 /**
 * a conversion table between the note length names, and the values used 
 * to represent those note lengths
@@ -30,6 +34,7 @@ live_score.rest_type = "r";
 
 live_score.translate_pitch_to_midi_number = function(pitch){
   var note = pitch.split("/")[0];
+  note = note.toUpperCase();
   var octave = pitch.split("/")[1];
   note = live_score.note_to_integer_table[note];
   octave = parseInt(octave,10);
@@ -74,6 +79,37 @@ live_score.note_to_integer_table = {
   "A" :9,
   "A#":10,
   "B" :11
+};
+
+live_score.note_length_lcm = 0;
+
+live_score.set_note_length_lcm = function(){
+  var note_lengths = [];
+  for (var note_length in live_score.note_lengths) {
+    note_lengths.push(live_score.note_lengths[note_length]);
+  }
+  live_score.note_length_lcm = live_score.lcm_of_array(note_lengths);
+};
+
+live_score.lcm_of_array = function(a){
+  var result = a[0];
+  for(var i = 1; i < a.length; i++){
+    result = live_score.lcm_of_pair(result, a[i]);
+  }
+  return result;
+};
+
+live_score.lcm_of_pair = function(b, c){
+  return b * (c / live_score.gcd_of_pair(b,c));
+};
+
+live_score.gcd_of_pair = function(b, c){
+  while(c > 0){
+    var temp = c;
+    c = b % c;
+    b = temp;
+  }
+  return b;
 };
 
 
