@@ -81,7 +81,7 @@ live_score.note_to_integer_table = {
   "B" :11
 };
 
-live_score.note_length_lcm = 0;
+live_score.note_length_lcm = 1;
 
 live_score.set_note_length_lcm = function(){
   var note_lengths = [];

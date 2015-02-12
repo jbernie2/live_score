@@ -79,8 +79,9 @@ live_score.Measure.prototype.optimal_rest_length = function(remaining_beats){
 };
 
 live_score.Measure.prototype.add_note = function(note_info){
-  var pitch = note_info.pitch;
-  var position = this.quantize_rhythm(note_info.quantize,note_info.x_position);
+  note_info.quantized_beat = this.quantize_rhythm(note_info.quantize,
+    note_info.x_position);
+  this.place_note_in_measure(note_info);
   return true;
 };
 
@@ -88,6 +89,7 @@ live_score.Measure.prototype.quantize_rhythm = function(quantize,position){
   var num_quantized_beats = (this.num_beats / this.beat_value) * quantize;
   var beat_position = num_quantized_beats * position;
   var quantized_position;
+  var quantized_beat;
 
   if(beat_position > Math.floor(num_quantized_beats)){
     quantized_position = this.quantize_to_partial_beat(num_quantized_beats,
@@ -95,7 +97,8 @@ live_score.Measure.prototype.quantize_rhythm = function(quantize,position){
   }else{
     quantized_position = this.quantize_to_full_beat(beat_position);
   }
-  return quantized_position;
+  quantized_beat = (quantized_position * this.beat_value) / quantize;
+  return quantized_beat;
 };
 
 live_score.Measure.prototype.quantize_to_partial_beat = function(
@@ -110,6 +113,7 @@ live_score.Measure.prototype.quantize_to_partial_beat = function(
   }else{
     quantized_position = num_quantized_beats;
   }
+
   return quantized_position;
 };
 
@@ -125,6 +129,11 @@ live_score.Measure.prototype.quantize_to_full_beat = function(beat_position){
     quantized_position = Math.ceil(beat_position);
   }
   return quantized_position;
+};
+
+live_score.Measure.prototype.place_note_in_measure = function(note_info){
+  
+
 };
 
 module.exports = live_score.Measure;
