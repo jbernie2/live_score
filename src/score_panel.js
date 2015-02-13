@@ -1,4 +1,5 @@
 live_score = require("./live_score.js");
+live_score.structs = require("./structs.js");
 live_score.Graphical_object = require("./graphical_object.js");
 
 /**
@@ -45,9 +46,7 @@ live_score.Score_panel.prototype.get_click_position = function(){
     var event_controller = this.event_controller;
 
     return function(e){
-      var event_info = {};
-
-      event_info.graphical_object = new live_score.Graphical_object();
+      var event_info = live_score.structs.create_event_info();
       event_info.graphical_object.start_x = e.clientX - score_canvas.offsetLeft;
       event_info.graphical_object.end_x = e.clientX - score_canvas.offsetLeft;
       event_info.graphical_object.start_y = e.clientY - score_canvas.offsetTop;
@@ -57,8 +56,9 @@ live_score.Score_panel.prototype.get_click_position = function(){
       //This would be which options are currently being used, including the
       //note length that is being selected and whatever else
       //event_info.ui_state = ui_state;
-      event_info.note_length = live_score.note_lengths.quarter;
-      event_info.quantize = live_score.note_lengths.quarter; 
+      event_info.ui_info.selected_note_length = 
+        live_score.note_lengths.quarter;
+      event_info.ui_info.quantization = live_score.note_lengths.quarter;
       event_controller.add_note(event_info);
    };
 };

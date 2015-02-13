@@ -1,5 +1,6 @@
-live_score       = require("./live_score.js");
-live_score.Stave = require("./stave.js");
+live_score         = require("./live_score.js");
+live_score.structs = require("./structs.js");
+live_score.Stave   = require("./stave.js");
 
 /**
 * Musical_state
@@ -23,16 +24,16 @@ live_score.Musical_state = function(){
 * add_staves
 *   adds additional staves to the score
 * args
-*   stave_options
-*     an array of contains information about the staves, each position in the
-*     array is another stave that is to be creatd. See live_score.add_staves
-*     for usage example 
+*   stave_info
+*     an object that contains information about the stave. See 
+*     live_score.add_staves for usage example 
 * returns
 *   none
 */
-live_score.Musical_state.prototype.add_staves = function(stave_options){
-  for(var i = 0; i < stave_options.length; i++){
-    this.staves.push(new live_score.Stave(stave_options[i]));
+live_score.Musical_state.prototype.add_staves = function(num_staves, stave_info){
+  for(var i = 0; i < num_staves; i++){
+    var stave_info_copy = live_score.structs.shallow_copy(stave_info);
+    this.staves.push(new live_score.Stave(stave_info_copy));
   }
 };
 
@@ -40,17 +41,16 @@ live_score.Musical_state.prototype.add_staves = function(stave_options){
 * add_measures
 *   adds additional measures to all staves in the score
 * args
-*   num_measures
-*     the number of measures to be added to the score
-*   measure_options
-*     the measure time signature information
+*   measure_info
+*     a struct containing the number of measures to add allong with 
+*     the measures' time signature information
 * returns
 *   none
 */
 live_score.Musical_state.prototype.add_measures = function(num_measures,
-  measure_options){
+  measure_info){
   for(var i = 0; i < this.staves.length; i++){
-    this.staves[i].add_measures(num_measures, measure_options);
+    this.staves[i].add_measures(num_measures, measure_info);
   }
 };
 

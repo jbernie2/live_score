@@ -1,21 +1,22 @@
-live_score       = require("./live_score.js");
-live_score.Voice = require("./voice.js");
+live_score         = require("./live_score.js");
+live_score.structs = require("./structs.js");
+live_score.Voice   = require("./voice.js");
 
 /**
 * Stave
 *   Constructor
 * args
-*   stave_options
+*   stave_info
 *     configuration options for creating a stave, currently just the clef type
 * returns
 *   none
 */
-live_score.Stave = function(stave_options){
+live_score.Stave = function(stave_info){
  
   /**
   * the type of clef that will be used by the stave
   */
-  this.clef = stave_options.clef;
+  this.clef = stave_info.clef;
 
   /**
   * an array of the voices contained in the stave
@@ -28,8 +29,8 @@ live_score.Stave = function(stave_options){
   this.barline_voice = undefined;
 
   /**
-  * a list of all the measure_options ordered chronologically,
-  * this is maintained at the stave level, so that all voices reference the
+  * a list of each measure's time signature information ordered chronologically,
+  * this is maintained at 'the stave level, so that all voices reference the
   * same time signature information
   */
   this.measure_meta_data = [];
@@ -40,16 +41,15 @@ live_score.Stave = function(stave_options){
 *   adds measures to a stave, adds measures to every voice in the stave
 * args
 *   num_measures
-*     the number of measures to add
-*   measure_options
+*     the number of measures being added 
+*   measure_info
 *     time signature information about the measures being added
 * returns
 *   none
 */
-live_score.Stave.prototype.add_measures = function(num_measures,
-  measure_options){
+live_score.Stave.prototype.add_measures = function(num_measures, measure_info){
   
-  this.add_measure_meta_data(num_measures,measure_options);
+  this.add_measure_meta_data(num_measures, measure_info);
 
   if(this.voices.length === 0){
     var new_voice = new live_score.Voice(this.measure_meta_data);
@@ -57,14 +57,14 @@ live_score.Stave.prototype.add_measures = function(num_measures,
   }
   else{
     for(var i = 0; i < voices.lengths; i++){
-      this.voices[i].add_measures(num_measures,measure_options);
+      this.voices[i].add_measures(num_measures, measure_info);
     }
   }
   
   if(!this.barline_voice){
     this.barline_voice = new live_score.Voice(this.measure_meta_data);
   }else{
-    this.barline_voice.add_measures(num_measures,measure_options);
+    this.barline_voice.add_measures(num_measures, measure_info);
   }
 };
 
@@ -95,16 +95,16 @@ live_score.Stave.prototype.add_note = function(note_info){
 *   adds time signature information about new measures to the measure meta data
 * args
 *   num_measures
-*     number of measures being added
-*   measure_options
+*     the number of measures being added
+*   measure_info
 *     time signature information for the measures being added 
 * returns
 *   none
 */
-live_score.Stave.prototype.add_measure_meta_data = function(num_measures,
-  measure_options){
+live_score.Stave.prototype.add_measure_meta_data = function(num_measures, measure_info){
   for(var i = 0; i < num_measures; i++){
-    this.measure_meta_data.push(measure_options);
+    var measure_info_copy = live_score.structs.shallow_copy(measure_info);
+    this.measure_meta_data.push(measure_info_copy);
   }
 };
 

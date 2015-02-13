@@ -79,14 +79,14 @@ live_score.Measure.prototype.optimal_rest_length = function(remaining_beats){
 };
 
 live_score.Measure.prototype.add_note = function(note_info){
-  note_info.quantized_beat = this.quantize_rhythm(note_info.quantize,
+  note_info.quantized_beat = this.quantize_rhythm(note_info.quantization,
     note_info.x_position);
   this.place_note_in_measure(note_info);
   return true;
 };
 
-live_score.Measure.prototype.quantize_rhythm = function(quantize,position){
-  var num_quantized_beats = (this.num_beats / this.beat_value) * quantize;
+live_score.Measure.prototype.quantize_rhythm = function(quantization,position){
+  var num_quantized_beats = (this.num_beats / this.beat_value) * quantization;
   var beat_position = num_quantized_beats * position;
   var quantized_position;
   var quantized_beat;
@@ -97,7 +97,7 @@ live_score.Measure.prototype.quantize_rhythm = function(quantize,position){
   }else{
     quantized_position = this.quantize_to_full_beat(beat_position);
   }
-  quantized_beat = (quantized_position * this.beat_value) / quantize;
+  quantized_beat = (quantized_position * this.beat_value) / quantization;
   return quantized_beat;
 };
 

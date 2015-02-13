@@ -1,4 +1,5 @@
 live_score                 = require("./live_score.js");
+live_score.structs         = require("./structs.js");
 live_score.Ui              = require("./ui.js");
 live_score.Graphical_state = require("./graphical_state.js");
 live_score.Musical_state   = require("./musical_state.js");
@@ -44,13 +45,18 @@ live_score.Score_editor = function(score_editor_div_id){
 };
 
 live_score.Score_editor.prototype.create_empty_score = function(){
-  
-  var stave_options = [{clef:"treble"}];
-  this.ms.add_staves(stave_options);
+ 
+  var num_staves = 1; 
+  var stave_info = live_score.structs.create_stave_info();
+  stave_info.clef = "treble";
+
+  this.ms.add_staves(num_staves,stave_info);
   
   var num_measures = 4;
-  var measure_options = {num_beats:4, beat_value:4};
-  this.ms.add_measures(num_measures,measure_options);
+  var measure_info = live_score.structs.create_measure_info();
+  measure_info.num_beats = 4;
+  measure_info.beat_value = 4;
+  this.ms.add_measures(num_measures, measure_info);
   
   this.renderer.render_score(this.ms.staves);
   
@@ -69,8 +75,9 @@ live_score.Score_editor.prototype.create_empty_score = function(){
 *   none
 */
 live_score.Score_editor.prototype.add_staves = function(event_info){
-  var stave_options = [{clef:"treble"}];
-  this.ms.add_staves(stave_options);
+  var stave_info = live_score.structs.create_stave_info();
+  stave_info.clef = "treble";
+  this.ms.add_staves(stave_info);
 };
 
 /**
@@ -82,10 +89,12 @@ live_score.Score_editor.prototype.add_staves = function(event_info){
 * returns
 *   none
 */
-live_score.Score_editor.prototype.add_measures = function(event_info){
+live_score.Score_editor.prototype.add_measures = function(event_info){ 
   var num_measures = 4;
-  var measure_options = {num_beats:4, beat_value:4};
-  this.ms.add_measures(num_measures,measure_options);
+  var measure_info = live_score.structs.create_measure_info();
+  measure_info.num_beats = 4;
+  measure_info.beat_value = 4;
+  this.ms.add_measures(num_measures, measure_info);
 };
 
 /**
