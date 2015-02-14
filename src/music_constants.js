@@ -1,8 +1,5 @@
 live_score = require("./live_score.js");
-
-live_score.init_constants = function(){
-  live_score.set_note_length_lcm();
-};
+Vex        = require("vexflow");
 
 /**
 * a conversion table between the note length names, and the values used 
@@ -81,7 +78,22 @@ live_score.note_to_integer_table = {
   "B" :11
 };
 
-live_score.note_length_lcm = 1;
+live_score.RESOLUTION = Vex.Flow.RESOLUTION;
+live_score.note_length_to_ticks = function(note_length){
+  return Vex.Flow.RESOLUTION/note_length;
+};
+
+live_score.ticks_to_note_length = function(ticks){
+  var derived_note_length = 0;
+  for(var note_length_name in live_score.note_lengths){
+    var note_length = live_score.note_lengths[note_length_name];
+    if(Math.round(ticks*note_length) === live_score.RESOLUTION){
+      derived_note_length = note_length;
+    }
+  }
+  return derived_note_length;
+};
+
 
 live_score.set_note_length_lcm = function(){
   var note_lengths = [];

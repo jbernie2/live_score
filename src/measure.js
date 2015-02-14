@@ -30,6 +30,9 @@ live_score.Measure = function(measure_meta_data){
   */
   this.notes = [];
 
+  this.num_ticks = this.num_beats * live_score.note_length_to_ticks(
+    this.beat_value);
+
   this.create_empty_measure();
 };
 
@@ -79,56 +82,36 @@ live_score.Measure.prototype.optimal_rest_length = function(remaining_beats){
 };
 
 live_score.Measure.prototype.add_note = function(note_info){
-  note_info.quantized_beat = this.quantize_rhythm(note_info.quantization,
+  note_info.quantized_beat = this.quantize_position(note_info.quantization,
     note_info.x_position);
   this.place_note_in_measure(note_info);
   return true;
 };
 
-live_score.Measure.prototype.quantize_rhythm = function(quantization,position){
-  var num_quantized_beats = (this.num_beats / this.beat_value) * quantization;
-  var beat_position = num_quantized_beats * position;
-  var quantized_position;
-  var quantized_beat;
-
-  if(beat_position > Math.floor(num_quantized_beats)){
-    quantized_position = this.quantize_to_partial_beat(num_quantized_beats,
-      beat_position);
-  }else{
-    quantized_position = this.quantize_to_full_beat(beat_position);
-  }
-  quantized_beat = (quantized_position * this.beat_value) / quantization;
-  return quantized_beat;
-};
-
-live_score.Measure.prototype.quantize_to_partial_beat = function(
-  num_quantized_beats,beat_position){
+live_score.Measure.prototype.quantize_position = function(quantization,position){
   
-  var quantized_position;
-  var quantize_left_shift = beat_position - Math.floor(num_quantized_beats);
-  var quantize_right_shift = num_quantized_beats - beat_position;
-  
-  if(quantize_left_shift < quantize_right_shift){
-    quantized_position = Math.floor(num_quantized_beats);
+  var quantized_beat_ticks = live_score.note_length_to_ticks(quantization);
+  var num_quantized_beats = this.num_ticks/quantized_beat_ticks;
+  var position_in_ticks = position*this.num_ticks;
+  var quantized_tick_position;
+  var min_tick_difference;
+
+  if(num_quantized_beats * quantized_beat_ticks < this.num_ticks){
+    quantized_tick_position = num_quantized_beats * quantized_beat_ticks;
+    min_tick_difference = Math.abs(this.num_ticks - position_in_ticks);
   }else{
-    quantized_position = num_quantized_beats;
+    quantized_tick_position = 0;
+    min_tick_difference = this.num_ticks;
   }
-
-  return quantized_position;
-};
-
-live_score.Measure.prototype.quantize_to_full_beat = function(beat_position){
-  
-  var quantized_position;
-  var quantize_left_shift = beat_position - Math.floor(beat_position);
-  var quantize_right_shift = Math.ceil(beat_position) - beat_position;
-
-  if(quantize_left_shift < quantize_right_shift){
-    quantized_position = Math.floor(beat_position);
-  }else{
-    quantized_position = Math.ceil(beat_position);
+  for(var i = 0; i < num_quantized_beats; i++){
+    var ticks_before_beat = i * quantized_beat_ticks;
+    var tick_difference = Math.abs(ticks_before_beat - position_in_ticks);
+    if(tick_difference < min_tick_difference){
+      min_tick_difference = tick_difference;
+      quantized_ticks_position = ticks_before_beat;
+    }
   }
-  return quantized_position;
+  return quantized_ticks_position;
 };
 
 live_score.Measure.prototype.place_note_in_measure = function(note_info){
