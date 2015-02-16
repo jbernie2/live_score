@@ -28,6 +28,8 @@ live_score.rest_pitch = "d/5";
 */
 live_score.rest_type = "r";
 
+live_score.note_type = "n";
+
 
 live_score.translate_pitch_to_midi_number = function(pitch){
   var note = pitch.split("/")[0];

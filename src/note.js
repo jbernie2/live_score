@@ -37,4 +37,8 @@ live_score.Note = function(pitch,length,type){
   this.type = type;
 };
 
+live_score.Note.prototype.is_rest = function(){
+  return (this.type === live_score.rest_type);
+};
+
 module.exports = live_score.Note;
