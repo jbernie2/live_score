@@ -46,7 +46,7 @@ live_score.translate_midi_number_to_pitch = function(midi_number){
   note = live_score.integer_to_note_table[note];
   var octave = Math.floor(midi_number/12);
   octave = octave.toString();
-  var pitch = note + octave;
+  var pitch = note +"/"+ octave;
   return pitch;
 };
 

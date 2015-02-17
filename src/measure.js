@@ -192,8 +192,9 @@ live_score.Measure.prototype.split_and_insert = function(current_position,
       this.notes.splice(note_to_split_index,0,rests[i]);
     }
     
-    var new_note = new live_score.Note(note.pitch, note_info.note_length,
-      live_score.note_type);     
+    var pitch = live_score.translate_midi_number_to_pitch(note_info.pitch);
+    var new_note = new live_score.Note(pitch, note_info.note_length,
+      live_score.note_type);
     this.notes.splice(note_to_split_index,0,new_note);
    
     rests = this.fill_space_with_rests(first_start_position,

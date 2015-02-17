@@ -93,7 +93,7 @@ live_score.Graphical_state.prototype.add_note = function(note_object){
   for(var i = 0; note_object.note_heads.length; i++){
     var note_area = new live_score.Graphical_object();
     var note_head = note_object.note_heads[i];
-    var bounding_box = note_head.getBoundindBox;
+    var bounding_box = note_head.getBoundingBox();
 
     note_area.start_x = bounding_box.x;
     note_area.end_x = bounding_box.x + bouding_box.w;
