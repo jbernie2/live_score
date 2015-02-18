@@ -39,13 +39,24 @@ live_score.Renderer = function(score_panel){
   this.vexflow_voices_list = [];
 };
 
+live_score.Renderer.prototype.clear_score = function(staves){
+  this.score_panel_context.clearRect(0,0,this.score_panel.width,
+    this.score_panel.height);
+};
+
 live_score.Renderer.prototype.display_score = function(staves){
   
+  this.clear_score();
+
   for(var i = 0; i < this.vexflow_staves.length; i++){
     var vexflow_stave = this.vexflow_staves[i];
     var vexflow_voices = this.vexflow_voices_list[i];
     
     vexflow_stave.draw();
+
+    var formatter = new Vex.Flow.Formatter().joinVoices(vexflow_voices).
+    format(vexflow_voices, 500);
+
     for(var j = 0; j < vexflow_voices.length; j++){
       vexflow_voices[j].draw(this.score_panel_context,vexflow_stave);
     }
@@ -75,7 +86,7 @@ live_score.Renderer.prototype.render_score = function(staves){
       staves[i].voices,staves[i].barline_voice);
 
     vexflow_stave.setContext(this.score_panel_context);
-    
+
     this.vexflow_staves.push(vexflow_stave);
     this.vexflow_voices_list.push(vexflow_voices);
   }
@@ -113,9 +124,6 @@ live_score.Renderer.prototype.render_voices = function(total_num_beats,voices,
   vexflow_barline_voice.addTickables(barlines);
   vexflow_voices.push(vexflow_barline_voice);
   */
-  var formatter = new Vex.Flow.Formatter().joinVoices(vexflow_voices).
-    format(vexflow_voices, 500);
-
   return vexflow_voices;
 };
 

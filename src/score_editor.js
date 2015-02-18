@@ -58,9 +58,9 @@ live_score.Score_editor.prototype.create_empty_score = function(){
   
   this.renderer.render_score(this.ms.staves);
   
-  this.gs.update(this.renderer);
-  
   this.renderer.display_score();
+  
+  this.gs.update(this.renderer);
 };
 
 /**
@@ -108,8 +108,8 @@ live_score.Score_editor.prototype.add_note = function(event_info){
   var note_info = this.gs.get_new_note_position(event_info);
   var staves = this.ms.add_note(note_info);
   this.renderer.render_score(staves);
-  this.gs.update(this.renderer);
   this.renderer.display_score();
+  this.gs.update(this.renderer);
 };
 
 module.exports = live_score.Score_editor;

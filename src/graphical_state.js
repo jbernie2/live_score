@@ -90,15 +90,16 @@ live_score.Graphical_state.prototype.is_barline = function(score_object){
 };
 
 live_score.Graphical_state.prototype.add_note = function(note_object){
-  for(var i = 0; note_object.note_heads.length; i++){
+  
+  for(var i = 0; i < note_object.note_heads.length; i++){
     var note_area = new live_score.Graphical_object();
     var note_head = note_object.note_heads[i];
-    var bounding_box = note_head.getBoundingBox();
 
-    note_area.start_x = bounding_box.x;
-    note_area.end_x = bounding_box.x + bouding_box.w;
-    note_area.start_y = bounding_box.y;
-    note_area.end_y = bounding_box.y + bouding_box.h;
+    note_area.start_x = note_head.x;
+    note_area.end_x = note_area.start_x + note_head.glyph.head_width;
+    note_area.start_y = note_head.y;
+    note_area.end_y = note_area.start_y + note_head.stave.
+      getSpacingBetweenLines();
 
     this.notes.push(note_area);
   }
