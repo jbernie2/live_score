@@ -28,7 +28,7 @@ live_score.Score_panel.prototype.create_score_canvas = function(){
   this.score_canvas = document.createElement('canvas');
   this.score_canvas.id = 'score_panel';
   this.score_canvas.width = 1000;
-  this.score_canvas.height = 500;
+  this.score_canvas.height = 200;
 };
 
 live_score.Score_panel.prototype.attach_score_panel = function(parent_element){

@@ -4,10 +4,20 @@
   </head>
   <body>
     <div id="live_score_main_panel"> </div>
+
+    <div id="mouse_tracker"> </div>
   </body>
   <script type="text/javascript">
     window.onload = function(){
       var score_editor = new live_score.Score_editor("live_score_main_panel");
+ 
+      var score_panel = score_editor.ui.score_panel.score_canvas;
+      score_panel.addEventListener('mousemove',function(e){
+        var x = e.clientX - score_panel.offsetLeft;
+        var y = e.clientY - score_panel.offsetTop;
+        var mouse_tracker = document.getElementById("mouse_tracker");
+        mouse_tracker.innerHTML = x +", "+ y;
+      }, false);
     };
   </script>
 </html>
