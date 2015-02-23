@@ -129,10 +129,22 @@ live_score.Graphical_state.prototype.add_stave = function(stave_object){
   stave_area.end_x = stave_object.bounds.x + stave_object.bounds.w;
   stave_area.start_y = stave_object.bounds.y;
   stave_area.end_y = stave_object.bounds.y + stave_object.height;
-  stave_area.space_between_notes = stave_object.getSpacingBetweenLines()/2;
-
-  this.staves.push(stave_area);
+  stave_area.space_between_notes = this.calculate_space_between_notes(
+    stave_object);
+   this.staves.push(stave_area);
 };
+
+live_score.Graphical_state.prototype.calculate_space_between_notes = 
+  function(stave_object){
+  
+  var num_diatonic_notes = 8;
+  var num_chromatic_notes = 12;
+  var space_between_diatonic_notes = stave_object.getSpacingBetweenLines()/2;
+  var space_between_chromatic_notes = Math.floor(
+    (space_between_diatonic_notes * num_diatonic_notes)/num_chromatic_notes);
+  return space_between_chromatic_notes;
+};
+
 
 live_score.Graphical_state.prototype.lookup_note = function(position){
   var note_found = false;

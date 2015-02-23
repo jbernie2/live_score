@@ -37,14 +37,14 @@ live_score.translate_pitch_to_midi_number = function(pitch){
   var octave = pitch.split("/")[1];
   note = live_score.note_to_integer_table[note];
   octave = parseInt(octave,10);
-  var midi_value = note + (octave * 12);
+  var midi_value = note + ((octave + 1) * 12);
   return midi_value;
 };
 
 live_score.translate_midi_number_to_pitch = function(midi_number){
   var note = midi_number%12;
   note = live_score.integer_to_note_table[note];
-  var octave = Math.floor(midi_number/12);
+  var octave = Math.floor(midi_number/12) - 1;
   octave = octave.toString();
   var pitch = note +"/"+ octave;
   return pitch;
