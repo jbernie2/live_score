@@ -37,6 +37,10 @@ live_score.Note = function(pitch,length,type){
   this.type = type;
 };
 
+live_score.Note.prototype.is_note = function(){
+  return (this.type === live_score.note_type);
+};
+
 live_score.Note.prototype.is_rest = function(){
   return (this.type === live_score.rest_type);
 };

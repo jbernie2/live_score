@@ -152,12 +152,15 @@ live_score.Measure.prototype.place_note_in_measure = function(note_info){
   var current_position = 0;
   var note_added = false;
   for(var i = 0; i <= this.notes.length && !note_added; i++){
-    if(current_position === note_position){
+    if(current_position === note_position && this.notes[i].is_note()){
       //TODO: add add_note function to Note object
       this.notes[i].add_note(note_info);
       note_added = true;
     }else if(current_position > note_position){
-      this.split_and_insert(current_position,i-1,note_info);
+      this.split_rest_and_insert_note(current_position,i-1,note_info);
+      note_added = true;
+    }else if(current_position === note_position && this.notes[i].is_rest()){
+      this.remove_rest_and_insert_note(current_position,i,note_info);
       note_added = true;
     }else{
       var note_length = this.notes[i].length;
@@ -167,45 +170,67 @@ live_score.Measure.prototype.place_note_in_measure = function(note_info){
   }
 };
 
-live_score.Measure.prototype.split_and_insert = function(current_position,
-  note_to_split_index,note_info){
+live_score.Measure.prototype.remove_rest_and_insert_note = function(
+  current_position,note_to_split_index,note_info){
   
-  var note_to_split = this.notes[note_to_split_index];
-  
-  //first split segment
-  var first_start_position = current_position - live_score.note_length_to_ticks(
+  var note_to_split = this.remove_rest(note_to_split_index);
+  var end_of_rest = current_position + live_score.note_length_to_ticks(
     note_to_split.length);
-  var first_end_position = note_info.quantized_tick_position; 
-  
-  //second split segment
-  var second_start_position = note_info.quantized_tick_position + 
-    live_score.note_length_to_ticks(note_info.note_length);
-  var second_end_position = current_position;
+  this.insert_rests_after_note(end_of_rest,note_to_split_index,note_info);
+  this.insert_new_note(note_to_split_index,note_info);
+};
 
-  if(note_to_split.is_rest()){
-    
-    this.notes.splice(note_to_split_index,1);
+live_score.Measure.prototype.split_rest_and_insert_note = function(
+  current_position,note_to_split_index,note_info){
   
-    var rests = this.fill_space_with_rests(second_start_position,
-      second_end_position);
-    for(var i = 0; i < rests.length; i++){
-      this.notes.splice(note_to_split_index,0,rests[i]);
-    }
-    
-    var pitch = live_score.translate_midi_number_to_pitch(note_info.pitch);
-    var new_note = new live_score.Note(pitch, note_info.note_length,
-      live_score.note_type);
-    this.notes.splice(note_to_split_index,0,new_note);
-   
-    rests = this.fill_space_with_rests(first_start_position,
-      first_end_position);
-    for(i = 0; i < rests.length; i++){
-      this.notes.splice(note_to_split_index,0,rests[i]);
-    }
-        
-  }else{
-    //TODO: fill in for what to do if note is being split
+  var note_to_split = this.remove_rest(note_to_split_index);
+  this.insert_rests_after_note(current_position,note_to_split_index,note_info);
+  this.insert_new_note(note_to_split_index,note_info);
+  this.insert_rests_before_note(current_position,note_to_split_index,note_to_split,
+    note_info); 
+};
+
+live_score.Measure.prototype.remove_rest = function(note_to_split_index){
+  var note_to_split = this.notes[note_to_split_index];
+  this.notes.splice(note_to_split_index,1);
+  return note_to_split;
+};
+
+live_score.Measure.prototype.insert_rests_before_note = function(
+  current_position,note_to_split_index,note_to_split,note_info){
+  
+  var start_position = current_position - live_score.note_length_to_ticks(
+    note_to_split.length);
+  var end_position = note_info.quantized_tick_position; 
+
+  var rests = this.fill_space_with_rests(start_position,
+    end_position);
+  for(var i = rests.length - 1; i >= 0; i--){
+    this.notes.splice(note_to_split_index,0,rests[i]);
   }
+};
+
+live_score.Measure.prototype.insert_rests_after_note = function(
+  current_position,note_to_split_index,note_info){
+ 
+  var start_position = note_info.quantized_tick_position + 
+    live_score.note_length_to_ticks(note_info.note_length);
+  var end_position = current_position;
+  
+  var rests = this.fill_space_with_rests(start_position,
+    end_position);
+  for(var i = rests.length - 1; i >= 0; i--){
+    this.notes.splice(note_to_split_index,0,rests[i]);
+  }
+};
+
+live_score.Measure.prototype.insert_new_note = function(note_to_split_index,
+  note_info){
+
+  var pitch = live_score.translate_midi_number_to_pitch(note_info.pitch);
+  var new_note = new live_score.Note(pitch, note_info.note_length,
+    live_score.note_type);
+  this.notes.splice(note_to_split_index,0,new_note);
 };
 
 module.exports = live_score.Measure;
