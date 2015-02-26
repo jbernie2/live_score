@@ -215,13 +215,16 @@ live_score.Renderer.prototype.create_vexflow_voice = function(total_num_beats){
 */
 live_score.Renderer.prototype.create_vexflow_note = function(note){
   var length = note.length.toString();
-  var pitch = note.pitch;
-  
   if(note.type === live_score.rest_type){
     length += live_score.rest_type;
   }
   
-  var vexflow_note = new Vex.Flow.StaveNote({keys: pitch, duration: length});
+  var pitches = [];
+  for(var i = 0; i < note.pitches.length; i++){
+    pitches.push(note.pitches[i].pitch);
+  }
+
+  var vexflow_note = new Vex.Flow.StaveNote({keys:pitches,duration:length});
   return vexflow_note;
 };
 
