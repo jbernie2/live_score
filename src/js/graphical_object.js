@@ -48,6 +48,18 @@ live_score.Graphical_object.prototype.intersects_area = function(
   return intersects;
 };
 
+/**
+* contains point
+*   determines if this graphical_object contains a given x,y coordinate
+* args
+*   x
+*     the point's x coordinate
+*   y
+*     the point's y coordinate
+* returns
+*   contains
+*     either true or false, whehter this graphical_object contains the point
+*/
 live_score.Graphical_object.prototype.contains_point = function(x,y){
   var contains = true;
   contains = contains && (this.start_x < x);

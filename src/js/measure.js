@@ -6,7 +6,7 @@ live_score.Note = require("./note.js");
 *   The constructor for the Measure object.
 * args
 *   measure_meta_data
-*     the measure_meta_data only for this measure
+*     the measure_meta_data, described in structs.js, for this measure
 * returns
 *   none
 */
@@ -30,6 +30,11 @@ live_score.Measure = function(measure_meta_data){
   */
   this.notes = [];
 
+  /**
+  * a tick is used to determine rhythmic positioning of notes in a measure.
+  * this determines the number of ticks in this measure, based on the time
+  * signature
+  */
   this.num_ticks = this.num_beats * live_score.note_length_to_ticks(
     this.beat_value);
 
@@ -51,20 +56,21 @@ live_score.Measure.prototype.create_empty_measure = function(){
   for(var i = 0; i < rests.length; i++){
     this.notes.push(rests[i]);
   }
-  /*
-  var ticks_left = this.num_ticks;
-  var ticks_so_far = 0;
-  while(ticks_left > 0){
-    var beat_level = this.calculate_beat_level(ticks_so_far);
-    ticks_left = this.num_ticks - ticks_so_far;
-    var rest_length = this.optimal_rest_length(beat_level, ticks_left);
-    ticks_left = ticks_left - live_score.note_length_to_ticks(rest_length);
-    this.notes.push(new live_score.Note(live_score.rest_pitch,rest_length,
-      live_score.rest_type));
-  }
-  */
 };
 
+/**
+* fill_space_with_rests
+*   given a length of time in ticks, this fills that space with rests in 
+*   such a way that makes musical sense
+* args
+*   start_tick
+*     the starting position of the space that needs to be filled
+*   end_tick
+*     the ending position of the space that needs to be filled
+* returns
+*   rests
+*     an array of rests that optimally fills the given space
+*/
 live_score.Measure.prototype.fill_space_with_rests = function(start_tick,
   end_tick){
   var rests = [];
@@ -80,6 +86,20 @@ live_score.Measure.prototype.fill_space_with_rests = function(start_tick,
   return rests;
 };
 
+/**
+* calculate_beat_level
+*   given a number of ticks, determines the beat on which the that tick is
+*   this makes sure that highest value note that can appear on a given beat
+*   is the same as that beat. e.g. a quarter note would not appear on the
+*   third sixteenth note beat of a measure.
+* args
+*   total_ticks
+*     the position of the beat in the measure, in ticks
+* returns
+*   beat_level
+*     the largest note/rest that can appear at the location denoted by
+*     total_ticks
+*/
 live_score.Measure.prototype.calculate_beat_level = function(total_ticks){
   var beat_level = this.num_ticks;
   for(var note_name in live_score.note_lengths){
@@ -94,6 +114,20 @@ live_score.Measure.prototype.calculate_beat_level = function(total_ticks){
   return beat_level;
 };
 
+/**
+* optimal_rest_length
+*   given the largest possible rest that can appear and the length of the
+*   empty space, determines the optimal rest size to insert
+* args
+*   beat_position
+*     the size of the largest possible rest that can be placed
+*   num_ticks
+*     the length of the space that needs to be filled
+* returns
+*   best_fit_note
+*     the largest note length that is both within the bounds of the 
+*     beat_position and whose length is not larger than num_ticks
+*/
 live_score.Measure.prototype.optimal_rest_length = function(beat_position,num_ticks){
 
   var min_tick_difference = this.num_ticks;
@@ -113,6 +147,16 @@ live_score.Measure.prototype.optimal_rest_length = function(beat_position,num_ti
   return best_fit_note;
 };
 
+/**
+* add_note
+*   adds a note to a measure
+* args
+*   note_info
+*     a struct, described in structs.js, that contiains information about the
+*     note being inserted
+* returns
+*   a boolean of whether or not the note was inserted successfully 
+*/
 live_score.Measure.prototype.add_note = function(note_info){
   note_info.quantized_tick_position = this.quantize_position(
     note_info.quantization,note_info.x_position);
@@ -120,6 +164,18 @@ live_score.Measure.prototype.add_note = function(note_info){
   return true;
 };
 
+/**
+* quantize_position
+*   determines the quantized position, in ticks, of a note
+* args
+*   quantization
+*     the beat level to which the note is being quantized
+*   position
+*     the position of a note in the measure represented as a percentage
+* returns
+*   quantized_ticks_position
+*     the quantized position of the note, in ticks
+*/
 live_score.Measure.prototype.quantize_position = function(quantization,position){
   
   var quantized_beat_ticks = live_score.note_length_to_ticks(quantization);
@@ -146,6 +202,17 @@ live_score.Measure.prototype.quantize_position = function(quantization,position)
   return quantized_ticks_position;
 };
 
+/**
+* place_note_in_measure
+*   handles all the different cases of how a note can be inserted into 
+*   a measure
+* args
+*   note_info
+*     a struct, described in structs.js, with information about the note being
+*     inserted
+* returns
+*   none
+*/
 live_score.Measure.prototype.place_note_in_measure = function(note_info){
   
   var note_position = note_info.quantized_tick_position;
@@ -170,6 +237,20 @@ live_score.Measure.prototype.place_note_in_measure = function(note_info){
   }
 };
 
+/**
+* remove_rest_and_insert_note
+*   handles the insert case where a note is placed where a rest currently is
+* args
+*   current_position
+*     the position of the rest that is being removed
+*   note_to_split_index
+*     the index of the rest that is being removed
+*   note_info
+*     a struct, described in structs.js, with information about the note being
+*     inserted
+* returns
+*   none
+*/
 live_score.Measure.prototype.remove_rest_and_insert_note = function(
   current_position,note_to_split_index,note_info){
   
@@ -180,6 +261,20 @@ live_score.Measure.prototype.remove_rest_and_insert_note = function(
   this.insert_new_note(note_to_split_index,note_info);
 };
 
+/**
+* split_rest_and_insert_note
+*   handles the insert case where a note is placed in the middle of a rest
+* args
+*   current_position
+*     the end position of the rest being split
+*   note_to_split_index
+*     the index of the rest that is being split
+*   note_info
+*     a struct, described in structs.js, with information about the note being
+*     inserted
+* returns
+*   none
+*/
 live_score.Measure.prototype.split_rest_and_insert_note = function(
   current_position,note_to_split_index,note_info){
   
@@ -190,12 +285,39 @@ live_score.Measure.prototype.split_rest_and_insert_note = function(
     note_info); 
 };
 
-live_score.Measure.prototype.remove_rest = function(note_to_split_index){
-  var note_to_split = this.notes[note_to_split_index];
-  this.notes.splice(note_to_split_index,1);
-  return note_to_split;
+/**
+* remove_rest
+*   removes a rest at a given position
+* args
+*   rest_index
+*     the index of the rest that is being removed
+* returns
+*   rest_to_remove
+*     the rest that has been removed 
+*/
+live_score.Measure.prototype.remove_rest = function(rest_index){
+  var rest_to_remove = this.notes[rest_index];
+  this.notes.splice(rest_index,1);
+  return rest_to_remove;
 };
 
+/**
+* insert_rests_before_note
+*   in the case where an inserted note splits a rest, determine how to fill
+*   the empty space before the note
+* args
+*   current_position
+*     the end position of the rest being split
+*   note_to_split_index
+*     the index of the rest that is being split
+*   note_to_split
+*     the rest that is being split
+*   note_info
+*     a struct, described in structs.js, with information about the note being
+*     inserted
+* returns
+*   none
+*/
 live_score.Measure.prototype.insert_rests_before_note = function(
   current_position,note_to_split_index,note_to_split,note_info){
   
@@ -210,6 +332,21 @@ live_score.Measure.prototype.insert_rests_before_note = function(
   }
 };
 
+/**
+* insert_rests_after_note
+*   in the case where an inserted note splits a rest, determine how to fill
+*   the empty space after the note
+* args
+*   current_position
+*     the end position of the rest being split
+*   note_to_split_index
+*     the index of the rest that is being split
+*   note_info
+*     a struct, described in structs.js, with information about the note being
+*     inserted
+* returns
+*   none
+*/
 live_score.Measure.prototype.insert_rests_after_note = function(
   current_position,note_to_split_index,note_info){
  
@@ -224,6 +361,18 @@ live_score.Measure.prototype.insert_rests_after_note = function(
   }
 };
 
+/**
+* insert_new_note
+*   insert a new note into the measure
+* args
+*   note_to_split_index
+*     the index where the note is being inserted
+*   note_info
+*     a struct, described in structs.js, with information about the note being
+*     inserted
+* returns
+*   none
+*/
 live_score.Measure.prototype.insert_new_note = function(note_to_split_index,
   note_info){
 
