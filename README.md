@@ -1,4 +1,4 @@
-# live_score v0.0.1
+# live_score v0.1.0
 
 An interactive score editor in javascript.
 
@@ -27,7 +27,13 @@ Install dependencies via NPM:
     $ cd live_score
     $ npm install
 
-Include `releases/live_score-min.js` into your HTML or JS code. It works as a standalone script in a `script` tag.
+Building the project
+
+    $ grunt
+
+Running Locally
+
+    Open build/index.html in your browser
 
 Copyright (c) John Bernier 2015 <br/>
 <john.b.bernier@gmail.com>

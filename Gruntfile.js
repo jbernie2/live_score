@@ -13,8 +13,12 @@ module.exports = function(grunt) {
   var RELEASE_DIR = 'releases';
   var TARGET_RAW = BUILD_DIR + '/live_score-debug.js';
   var TARGET_MIN = BUILD_DIR + '/live_score-min.js';
-
-  var SOURCES = [ "src/*.js" ];
+  
+  var HTML_DIR = 'src/html';
+  var CSS_DIR = 'src/css';
+  
+  var SOURCES = [ "src/js/*.js" ];
+ 
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -69,6 +73,22 @@ module.exports = function(grunt) {
             src    : ['*.js', 'docs/**', '*.map']
           }
         ]
+      },
+      build: {
+        files: [
+          {
+            expand: true,
+            dest: BUILD_DIR,
+            cwd: HTML_DIR,
+            src    : ['*.html']
+          },
+          {
+            expand: true,
+            dest: BUILD_DIR,
+            cwd: CSS_DIR,
+            src   : ['*.css']
+          }
+        ]
       }
     },
     docco: {
@@ -91,5 +111,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-docco');
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'browserify:live_score', 'uglify', 'docco']);
+  grunt.registerTask('default', ['jshint', 'browserify:live_score', 'uglify', 'copy:build', 'docco']);
 };

@@ -30,8 +30,15 @@ live_score.Ui = function(event_controller, score_editor_div_id){
   this.score_editor_div = document.getElementById(score_editor_div_id);
 
   this.score_panel = new live_score.Score_panel(event_controller);
-  this.score_panel.attach_score_panel(this.score_editor_div);
+  //this.score_panel.attach_score_panel(this.score_editor_div);
 
+  //this.cursor_panel = new live_score.Cursor_panel(event_controller);
+
+};
+
+live_score.Ui.prototype.attach_panel = function(ui_object){
+  var panel = ui_object.get_panel();
+  this.score_editor_div.appendChild(this.score_canvas);
 };
 
 live_score.Ui.prototype.get_score_panel = function(){
