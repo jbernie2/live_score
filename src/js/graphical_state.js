@@ -380,8 +380,8 @@ live_score.Graphical_state.prototype.get_new_note_position = function(
     click_area);
   note_info.y_position = this.get_note_position(note_info.stave_num,
     click_area);
-  note_info.note_length = event_info.ui_info.selected_note_length;
-  note_info.quantization = event_info.ui_info.quantization;
+  note_info.note_length = event_info.note_length;
+  note_info.quantization = event_info.quantization;
 
   return note_info;
 };

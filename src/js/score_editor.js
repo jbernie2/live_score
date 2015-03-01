@@ -120,4 +120,10 @@ live_score.Score_editor.prototype.add_note = function(event_info){
   this.gs.update(this.renderer);
 };
 
+live_score.Score_editor.prototype.remove_note = function(event_info){
+  console.log("remove_note");
+
+};
+
+
 module.exports = live_score.Score_editor;

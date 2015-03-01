@@ -103,11 +103,16 @@ live_score.structs.create_event_info = function(){
     * the graphical object containing a point or area on the score
     */
     graphical_object: new live_score.Graphical_object(),
+ 
+    /**
+    * the length of the note being inserted
+    */
+    note_length:0,
 
     /**
-    * (see create_ui_info)
+    * the beat level to which the note will be quantized before being inserted
     */
-    ui_info: {} 
+    quantization:0,
   };
 };
 
@@ -124,12 +129,17 @@ live_score.structs.create_ui_info = function(){
     /**
     * the note length currently selected in the ui
     */
-    selected_note_length:0,
+    note_length:0,
     
     /**
     * the quantization level currently selected in the ui
     */
-    quantization:0
+    quantization:0,
+
+    /**
+    * denotes whether notes are being added or removed
+    */
+    input_mode:""
   };
 };
 

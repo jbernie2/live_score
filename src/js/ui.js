@@ -1,4 +1,7 @@
 live_score = require("./live_score.js");
+live_score.structs = require("./structs.js");
+live_score.Score_panel = require("./score_panel.js");
+live_score.Control_panel = require("./control_panel.js");
 
 /**
 * Ui
@@ -29,10 +32,12 @@ live_score.Ui = function(event_controller, score_editor_div_id){
   */
   this.score_editor_div = document.getElementById(score_editor_div_id);
 
-  this.score_panel = new live_score.Score_panel(event_controller);
-  //this.score_panel.attach_score_panel(this.score_editor_div);
+  this.ui_info = live_score.structs.create_ui_info();
 
-  //this.cursor_panel = new live_score.Cursor_panel(event_controller);
+  this.score_panel = new live_score.Score_panel(event_controller,
+    this.ui_info);
+
+  this.control_panel = new live_score.Control_panel(this.ui_info);
 
 };
 

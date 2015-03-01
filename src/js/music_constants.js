@@ -38,6 +38,10 @@ live_score.rest_type = "r";
 */
 live_score.note_type = "n";
 
+live_score.insert_mode = "insert";
+
+live_score.remove_mode = "remove";
+
 /**
 * translate_pitch_to_midi_number
 *   given a pitch of the style "d/5" d being the note and 5 being the 
