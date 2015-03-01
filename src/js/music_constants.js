@@ -14,6 +14,11 @@ live_score.note_lengths = {
   "thirty-second":32
 };
 
+/**
+* a lookup table for the highest allowed note for each clef type. This is used
+* to determine the y position of a note being inserted
+* 
+*/
 live_score.highest_clef_pitch = {
   "treble":"g/6"
 };
@@ -28,9 +33,23 @@ live_score.rest_pitch = "d/5";
 */
 live_score.rest_type = "r";
 
+/**
+* in live_score.Note, this how a note is denoted
+*/
 live_score.note_type = "n";
 
-
+/**
+* translate_pitch_to_midi_number
+*   given a pitch of the style "d/5" d being the note and 5 being the 
+*   octave number, returns the midi note number equivalent
+* args
+*   pitch
+*     a string of the style "d/5" d being the note and 5 being the 
+*     octave number. This is the format used by Vexflow
+* returns
+*   midi_value
+*     an integer representing the pitch value as midi value
+*/
 live_score.translate_pitch_to_midi_number = function(pitch){
   var note = pitch.split("/")[0];
   note = note.toUpperCase();
@@ -41,6 +60,17 @@ live_score.translate_pitch_to_midi_number = function(pitch){
   return midi_value;
 };
 
+/**
+* translate_midi_number_to_pitch
+*   given a midi note value, converts it to a Vexflow style pitch string
+* args
+*   midi_number
+*     an integer representing a pitch value
+* returns
+*   pitch
+*     a string of the style "d/5" d being the note and 5 being the 
+*     octave number. This is the format used by Vexflow
+*/
 live_score.translate_midi_number_to_pitch = function(midi_number){
   var note = midi_number%12;
   note = live_score.integer_to_note_table[note];
@@ -50,6 +80,9 @@ live_score.translate_midi_number_to_pitch = function(midi_number){
   return pitch;
 };
 
+/**
+* a table that converts an integer to its corresponding note name
+*/
 live_score.integer_to_note_table = {
   0: "C",
   1: "C#",
@@ -65,6 +98,9 @@ live_score.integer_to_note_table = {
   11: "B"
 };
 
+/**
+* a table that converts a note name to its corresponding integer
+*/
 live_score.note_to_integer_table = {
   "C" :0,
   "C#":1,
@@ -80,11 +116,35 @@ live_score.note_to_integer_table = {
   "B" :11
 };
 
+/**
+* a constant used by Vexflow to calculate rhythmic positioning
+* also used by live_score for rhythmic position
+* represents the number of ticks in a 4/4 measure
+*/
 live_score.RESOLUTION = Vex.Flow.RESOLUTION;
+
+/**
+* note_length_to_ticks
+*   converts a note length into the equivalent number of ticks
+* args
+*   note_length
+*     the note length being converted
+* returns
+*   an integer equal to the number of ticks of note_length
+*/
 live_score.note_length_to_ticks = function(note_length){
   return Vex.Flow.RESOLUTION/note_length;
 };
 
+/**
+* ticks_to_note_length
+*   converts a number of ticks into the equivalent note_length
+* args
+*   ticks
+*     the number of ticks being converted
+* returns
+*   a note length equivalent to the number of ticks
+*/
 live_score.ticks_to_note_length = function(ticks){
   var derived_note_length = 0;
   for(var note_length_name in live_score.note_lengths){
@@ -96,7 +156,16 @@ live_score.ticks_to_note_length = function(ticks){
   return derived_note_length;
 };
 
-
+/**
+* set_note_length_lcm
+*   find the lowest common multiple of all the note lengths
+*   this can be used to have the number of ticks of each measure
+*   always be divisible by the duration of each note
+* args
+*   none
+* returns
+*   none
+*/
 live_score.set_note_length_lcm = function(){
   var note_lengths = [];
   for (var note_length in live_score.note_lengths) {
@@ -105,6 +174,16 @@ live_score.set_note_length_lcm = function(){
   live_score.note_length_lcm = live_score.lcm_of_array(note_lengths);
 };
 
+/**
+* lcm_of_array
+*   finds the lowest common multiple of an array of integers
+* args
+*   a
+*     an array if integers
+* returns
+*   result
+*     the lcm of the array of integers
+*/
 live_score.lcm_of_array = function(a){
   var result = a[0];
   for(var i = 1; i < a.length; i++){
@@ -113,9 +192,34 @@ live_score.lcm_of_array = function(a){
   return result;
 };
 
+/**
+* lcm_of_pair
+*   finds the lowest common multiple of two numbers
+* args
+*   b
+*     an integer
+*   c
+*     an integer
+* returns
+*   the lcm of b and c
+*/
+
 live_score.lcm_of_pair = function(b, c){
   return b * (c / live_score.gcd_of_pair(b,c));
 };
+
+/**
+* gcd_of_pair
+*   finds the greatest common divisor of two integers
+* args
+*   b
+*     an integer
+*   c
+*     an integer 
+* returns
+*   b
+*     the greatest common divisor of b and c
+*/
 
 live_score.gcd_of_pair = function(b, c){
   while(c > 0){
@@ -125,7 +229,4 @@ live_score.gcd_of_pair = function(b, c){
   }
   return b;
 };
-
-
-
 

@@ -13,7 +13,7 @@ live_score.Graphical_object = require("./graphical_object.js");
 live_score.Score_panel = function(event_controller){
   this.event_controller = event_controller;
   this.create_score_canvas();
-  this.score_canvas_event_listeners();
+  this.attach_event_listeners();
 };
 
 /**
@@ -30,15 +30,41 @@ live_score.Score_panel.prototype.create_score_canvas = function(){
   this.score_canvas.height = 90;
 };
 
+/**
+* attach_score_panel
+*   attaches score_panel canvas to html element
+* args
+*   parent
+*     the html element that the canvas is being attached to
+* returns
+*   none
+*/
 live_score.Score_panel.prototype.attach_score_panel = function(parent_element){
   parent_element.appendChild(this.score_canvas);
 };
 
-live_score.Score_panel.prototype.score_canvas_event_listeners = function(){
+/**
+* attach_event_listeners
+*   attaches event listeners to the score_panel canvas
+* args
+*   none
+* returns
+*   none
+*/
+live_score.Score_panel.prototype.attach_event_listeners = function(){
   this.score_canvas.addEventListener('mousedown',this.get_click_position(),
     false);  
 };
 
+/**
+* get_click_position
+*   attaches an event listener that captures the position of a mouse click
+*   on the canvas
+* args
+*   none
+* returns
+*   a function that processes mouse clicks on the canvas
+*/
 live_score.Score_panel.prototype.get_click_position = function(){
     
     var score_canvas = this.score_canvas;

@@ -42,6 +42,15 @@ live_score.Voice.prototype.create_empty_voice = function(){
   }
 };
 
+/**
+* add_note
+*   adds a note to the voice
+* args
+*   note_info
+*     a struct, see structs.js, containing info about the note being inserted
+* returns
+*   a boolean of whether the note was successfully inserted
+*/
 live_score.Voice.prototype.add_note = function(note_info){
   return this.measures[note_info.measure_num].add_note(note_info);
 };

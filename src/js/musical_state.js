@@ -54,8 +54,20 @@ live_score.Musical_state.prototype.add_measures = function(num_measures,
   }
 };
 
+/**
+* add_note
+*   adds a note to the score
+* args
+*   note_info
+*     a struct, described in structs.js containing information about the 
+*     note being inserted 
+* returns
+*   this.staves
+*     an array containing all the musical_state information
+*/
 live_score.Musical_state.prototype.add_note = function(note_info){
   this.staves[note_info.stave_num].add_note(note_info);
   return this.staves;
 };
+
 module.exports = live_score.Musical_state;

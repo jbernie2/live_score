@@ -24,11 +24,6 @@ live_score.Stave = function(stave_info){
   this.voices = [];
 
   /**
-  * a special voice used to render barlines between measures MAY BE REMOVED
-  */
-  this.barline_voice = undefined;
-
-  /**
   * a list of each measure's time signature information ordered chronologically,
   * this is maintained at 'the stave level, so that all voices reference the
   * same time signature information
@@ -61,11 +56,6 @@ live_score.Stave.prototype.add_measures = function(num_measures, measure_info){
     }
   }
   
-  if(!this.barline_voice){
-    this.barline_voice = new live_score.Voice(this.measure_meta_data);
-  }else{
-    this.barline_voice.add_measures(num_measures, measure_info);
-  }
 };
 
 /**
@@ -132,6 +122,17 @@ live_score.Stave.prototype.get_total_num_beats = function(){
   return total_beats;
 };
 
+/**
+* get_pitch_from_note_position
+*   calculates the midi value of a y position based on its distance from
+*   the highest possible note allows in the stave
+* args
+*   y_position
+*     the distance, in chromatic notes, from the highest note in the stave
+* returns
+*   new_pitch
+*     the midi value of the note 
+*/
 live_score.Stave.prototype.get_pitch_from_note_position = function(y_position){
   var highest_pitch = live_score.highest_clef_pitch[this.clef];
   highest_pitch = live_score.translate_pitch_to_midi_number(highest_pitch);

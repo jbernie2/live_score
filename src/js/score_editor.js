@@ -42,6 +42,14 @@ live_score.Score_editor = function(score_editor_div_id){
   this.create_empty_score();
 };
 
+/**
+* create_empty_score
+*   creates one stave with four empty measures
+* args
+*   none
+* returns
+*   none
+*/
 live_score.Score_editor.prototype.create_empty_score = function(){
  
   var num_staves = 1; 
