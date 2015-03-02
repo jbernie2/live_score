@@ -101,7 +101,9 @@ live_score.Note.prototype.is_rest = function(){
 };
 
 live_score.Note.prototype.make_rest = function(){
+  var pitch = live_score.rest_pitch;
   this.type = live_score.rest_type;
+  this.pitches.push({"pitch":pitch,"length":length,"type":this.type});
 };
 
 
