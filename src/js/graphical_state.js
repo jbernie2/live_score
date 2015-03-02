@@ -327,7 +327,7 @@ live_score.Graphical_state.prototype.get_measure_position =
 };
 
 /**
-* get_note_position
+* get_note_distance
 *   determines where within a stave a given position is located, this
 *   is used to determine the final y position of the click in relation to
 *   other notes in the score
@@ -342,7 +342,7 @@ live_score.Graphical_state.prototype.get_measure_position =
 *     the distance, in chromatic notes, that a given position is from the
 *     highest possible note in a stave
 */
-live_score.Graphical_state.prototype.get_note_position = 
+live_score.Graphical_state.prototype.get_note_distance = 
   function(stave_num,position){
   var containing_stave = this.staves[stave_num];
   var y_position_in_stave =  position.start_y - containing_stave.start_y;
@@ -378,12 +378,36 @@ live_score.Graphical_state.prototype.get_new_note_position = function(
   note_info.measure_num = this.lookup_measure(click_area);
   note_info.x_position = this.get_measure_position(note_info.measure_num,
     click_area);
-  note_info.y_position = this.get_note_position(note_info.stave_num,
+  note_info.y_position = this.get_note_distance(note_info.stave_num,
     click_area);
   note_info.note_length = event_info.note_length;
   note_info.quantization = event_info.quantization;
 
   return note_info;
 };
+
+live_score.Graphical_state.prototype.get_note_position = function(
+  event_info){
+  
+  var click_area = event_info.graphical_object;
+  var note_info = live_score.structs.create_note_info();
+  note_info.stave_num = this.lookup_stave(click_area);
+  note_info.measure_num = this.lookup_measure(click_area);
+  note_info.x_position = this.get_measure_position(note_info.measure_num,
+    click_area);
+  note_info.y_position = this.get_note_distance(note_info.stave_num,
+    click_area);
+  note_info.note_length = event_info.note_length;
+  note_info.quantization = event_info.quantization;
+
+  if(!this.lookup_note(click_area)){
+    note_info = null;
+  }
+
+  return note_info;
+
+};
+
+
 
 module.exports = live_score.Graphical_state;

@@ -55,4 +55,8 @@ live_score.Voice.prototype.add_note = function(note_info){
   return this.measures[note_info.measure_num].add_note(note_info);
 };
 
+live_score.Voice.prototype.remove_note = function(note_info){
+  return this.measures[note_info.measure_num].remove_note(note_info);
+};
+
 module.exports = live_score.Voice;

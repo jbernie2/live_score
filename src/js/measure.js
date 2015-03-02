@@ -164,6 +164,13 @@ live_score.Measure.prototype.add_note = function(note_info){
   return true;
 };
 
+live_score.Measure.prototype.remove_note = function(note_info){
+  note_info.quantized_tick_position = this.quantize_position(
+    note_info.quantization,note_info.x_position);
+  this.remove_note_from_measure(note_info);
+  return true;
+};
+
 /**
 * quantize_position
 *   determines the quantized position, in ticks, of a note
@@ -220,7 +227,6 @@ live_score.Measure.prototype.place_note_in_measure = function(note_info){
   var note_added = false;
   for(var i = 0; i <= this.notes.length && !note_added; i++){
     if(current_position === note_position && this.notes[i].is_note()){
-      //TODO: add add_note function to Note object
       this.notes[i].add_note(note_info);
       note_added = true;
     }else if(current_position > note_position){
@@ -380,6 +386,27 @@ live_score.Measure.prototype.insert_new_note = function(note_to_split_index,
   var new_note = new live_score.Note(pitch, note_info.note_length,
     live_score.note_type);
   this.notes.splice(note_to_split_index,0,new_note);
+};
+
+live_score.Measure.prototype.remove_note_from_measure = function(note_info){
+  var note_position = note_info.quantized_tick_position;
+  var current_position = 0;
+  var note_removed = false;
+  var empty_note;
+  for(var i = 0; i <= this.notes.length && !note_removed; i++){
+    if(current_position === note_position && this.notes[i].is_note()){
+      empty_note = this.notes[i].remove_note(note_info);
+      note_removed = true;
+    }else{
+      var note_length = this.notes[i].length;
+      var tick_length = live_score.note_length_to_ticks(note_length);
+      current_position += tick_length;
+    }
+  }
+  if(empty_note){
+    var note_index = i-1;
+    this.notes[note_index].make_rest();
+  }
 };
 
 module.exports = live_score.Measure;

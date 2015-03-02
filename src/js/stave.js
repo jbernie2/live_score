@@ -80,6 +80,14 @@ live_score.Stave.prototype.add_note = function(note_info){
   }
 };
 
+live_score.Stave.prototype.remove_note = function(note_info){
+  note_info.pitch = this.get_pitch_from_note_position(note_info.y_position);
+  var note_removed = false;
+  for(var i = 0; i < this.voices.length && !note_removed; i++){
+    note_removed = this.voices[i].remove_note(note_info);
+  }
+};
+
 /**
 * add_measure_meta_data
 *   adds time signature information about new measures to the measure meta data

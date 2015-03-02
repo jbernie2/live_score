@@ -85,7 +85,11 @@ live_score.structs.create_note_info = function(){
     /**
     * the beat level to which the note will be quantized before being inserted
     */
-    quantization:0
+    quantization:0,
+
+    tick_position:0,
+
+    quantized_tick_position:0
   };
 };
 

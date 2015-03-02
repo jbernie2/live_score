@@ -61,6 +61,21 @@ live_score.Note.prototype.add_note = function(note_info){
   this.pitches.push({"pitch":pitch,"length":length,"type":type});
 };
 
+live_score.Note.prototype.remove_note = function(note_info){
+  var pitch = live_score.translate_midi_number_to_pitch(note_info.pitch);
+  var is_empty = false;
+
+  for(var i = 0; i < this.pitches.length; i++){
+    if(this.pitches[i].pitch === pitch){
+      this.pitches.splice(i,1);
+    }
+  }
+  if(this.pitches.length === 0){
+    is_empty = true;
+  }
+  return is_empty;
+};
+
 /**
 * is_note
 *   checks if this Note object contains notes or rests
@@ -84,5 +99,10 @@ live_score.Note.prototype.is_note = function(){
 live_score.Note.prototype.is_rest = function(){
   return (this.type === live_score.rest_type);
 };
+
+live_score.Note.prototype.make_rest = function(){
+  this.type = live_score.rest_type;
+};
+
 
 module.exports = live_score.Note;
