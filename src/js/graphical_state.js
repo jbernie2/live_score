@@ -110,6 +110,26 @@ live_score.Graphical_state.prototype.format_score_contents =
   return score_contents;
 };
 
+live_score.Graphical_state.prototype.get_score_positions = function(staves,
+  voice_list){  
+  
+  for(var i = 0; i < voice_list.length; i++){
+    var stave_contents = [];
+    var voice = voice_list[i];
+    for(var j = 0; j < voice.length; j++){
+      var voice_contents = voice[j].tickables;
+      for(var k = 0; k < voice_contents.length; k++){
+        voice_contents[k].stave = staves[i];
+        stave_contents.push(voice_contents[k]);
+      }
+    }
+    var graphical_stave = new live_score.Graphical_stave();
+    graphical_stave.extract_positional_information(staves[i], stave_contents);
+    this.staves.push(graphical_stave);
+  }
+}; 
+
+
 /**
 * is_note
 *   checks if a given score_object is a note
