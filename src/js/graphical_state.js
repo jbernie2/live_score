@@ -110,9 +110,19 @@ live_score.Graphical_state.prototype.format_score_contents =
   return score_contents;
 };
 
-live_score.Graphical_state.prototype.get_score_positions = function(staves,
-  voice_list){  
+
+//TODO: 
+//TODO: replace update() with this function and update clear_state()
+//TODO: and test this function along with the supporting classes
+//TODO: also will have to make get_note_position and get_new_note_position
+//TODO: complient with this new code
+live_score.Graphical_state.prototype.get_score_positions = function(renderer){
+   
+  this.clear_state();
   
+  var staves = renderer.get_staves();
+  var voice_list = renderer.get_voices();
+
   for(var i = 0; i < voice_list.length; i++){
     var stave_contents = [];
     var voice = voice_list[i];
