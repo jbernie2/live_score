@@ -2,6 +2,7 @@ live_score = require("./live_score.js");
 
 live_score.Graphical_stave = function(){
   this.bounds = new live_score.Graphical_object();
+  this.space_between_notes = 0;
   this.measures = [];
 };
 
@@ -38,7 +39,7 @@ live_score.Graphical_stave.prototype.extract_stave_info = function(
   this.bounds.end_x = stave_object.bounds.x + stave_object.bounds.w;
   this.bounds.start_y = stave_object.bounds.y;
   this.bounds.end_y = stave_object.bounds.y + stave_object.height;
-  this.bounds.space_between_notes = this.calculate_space_between_notes(
+  this.space_between_notes = this.calculate_space_between_notes(
     stave_object);
 };
 
@@ -58,11 +59,36 @@ live_score.Graphical_stave.prototype.is_barline = function(score_object){
           score_object.duration === "b");
 };
 
-live_score.Graphical_stave.prototype.add_measure = function(){
+/**
+* calculate_space_between_notes
+*   calculates the space (in pixels) between two adjacent chromatic notes
+*   in a stave
+* args
+*   stave_object
+*     an object representing a stave, created by Vexflow, that is displayed
+*     in the score
+* returns
+*   space_between_chromatic_notes
+*     the space between two adjacent chromatic notes in the stave
+*/
+live_score.Graphical_stave.prototype.calculate_space_between_notes = 
+  function(stave_object){
+  
+  var num_diatonic_notes = 8;
+  var num_chromatic_notes = 12;
+  var space_between_diatonic_notes = stave_object.getSpacingBetweenLines()/2;
+  var space_between_chromatic_notes = Math.floor(
+    (space_between_diatonic_notes * num_diatonic_notes)/num_chromatic_notes);
+  return space_between_chromatic_notes;
+};
+
+live_score.Graphical_stave.prototype.add_measure = function(score_object,
+  measure_contents){
+  
   var gm = new live_score.Graphical_measure();
   var previous_gm = null;
   if(this.measures.length > 0){
-    previous_gm = this.measures[this.measures.length - 1];
+    previous_gm = this.measures[this.measures.length - 1].bounds;
   }
   gm.extract_positional_info(previous_gm,score_object,measure_contents);
   this.measures.push(gm);
@@ -73,46 +99,52 @@ live_score.Graphical_stave.prototype.contains = function(graphical_object){
 };
 
 /**
-* lookup_measure
+* get_note_info
 *   determines if the bounds of a graphical object overlap with the bounds of
 *   a measure in the score
 * args
 *   graphical_object
 *     a graphical_object containing the coordinates being checked against the
 *     coordinates of the measures in the score
+*   note_info
+*     struct, described in structs.js, that contains the results of the lookup
 * returns
-*     an integer denoting the index of the first measure that contains the 
-*     position
+*     none
 */
-live_score.Graphical_stave.prototype.lookup_measure = function(graphical_object){
+live_score.Graphical_stave.prototype.get_note_info = function(graphical_object,
+  note_info,is_new_note){
+
+  if(is_new_note){
+    note_info.y_position = this.get_measure_position_y(graphical_object);
+  }
+
   var measure_found = false;
   for(var i = 0; i < this.measures.length && !measure_found; i++){
-    measure_found = this.measures[i].contains(graphical_object);
+    if(this.measures[i].contains(graphical_object)){
+      note_info.measure_num = i;
+      measure_found = true;
+      this.measures[i].get_note_info(graphical_object,note_info,is_new_note);
+    }
   }
-  return i - 1;
 };
 
 /**
-* lookup_note
-*   determines if the bounds of a graphical object overlap with the position
-*   of a note in the score
+* get_note_distance
+*   determines where within a stave a given position is located, this
+*   is used to determine the final y position of the click in relation to
+*   other notes in the score
 * args
 *   graphical_object
-*     a graphical_object containing the coordinates being checked against the
-*     coordinates of the notes in the score
+*     coordinates of the note being checked 
 * returns
-*   note_info
-*     a struct, described in structs.js, with information about the note
+*   note_distance_from_top
+*     the distance, in chromatic notes, that a given position is from the
+*     highest possible note in a stave
 */
-live_score.Graphical_stave.prototype.lookup_note = function(measure_num,
+live_score.Graphical_stave.prototype.get_measure_position_y = function(
   graphical_object){
-  var note_info = null;
-  note_info = this.measures[i].lookup_note(graphical_object);
-  return note_info;
+  var y_position_in_stave =  graphical_object.start_y - this.bounds.start_y;
+  var note_distance_from_top = y_position_in_stave / this.space_between_notes;
+  note_distance_from_top = Math.round(note_distance_from_top);
+  return note_distance_from_top;
 };
-
-
-
-
-
-

@@ -128,7 +128,7 @@ live_score.Score_editor.prototype.remove_note = function(event_info){
   console.log("remove_note");
  
   var note_info = this.gs.get_note_position(event_info);
-  if(note_info){
+  if(note_info.note_found){
     var staves = this.ms.remove_note(note_info);
     this.renderer.render_score(staves);
     this.renderer.display_score();

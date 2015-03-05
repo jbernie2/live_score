@@ -89,7 +89,9 @@ live_score.structs.create_note_info = function(){
 
     tick_position:0,
 
-    quantized_tick_position:0
+    quantized_tick_position:0,
+
+    note_found:0
   };
 };
 

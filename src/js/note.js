@@ -62,7 +62,7 @@ live_score.Note.prototype.add_note = function(note_info){
 };
 
 live_score.Note.prototype.remove_note = function(note_info){
-  var pitch = live_score.translate_midi_number_to_pitch(note_info.pitch);
+  var pitch = note_info.pitch;
   var is_empty = false;
 
   for(var i = 0; i < this.pitches.length; i++){

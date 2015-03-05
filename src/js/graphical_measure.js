@@ -39,11 +39,11 @@ live_score.Graphical_measure.prototype.extract_measure_info = function(
   if(previous_measure === null){
     this.bounds.start_x = current_measure.stave.start_x;
   }else{
-    measure_area.start_x = previous_measure.end_x + 1;
+    this.bounds.start_x = previous_measure.end_x + 1;
   } 
-  measure_area.end_x = current_measure.getAbsoluteX();
-  measure_area.start_y = current_measure.stave.bounds.y;
-  measure_area.end_y = current_measure.stave.bounds.y + 
+  this.bounds.end_x = current_measure.getAbsoluteX();
+  this.bounds.start_y = current_measure.stave.bounds.y;
+  this.bounds.end_y = current_measure.stave.bounds.y + 
                         current_measure.stave.height; 
 };
 
@@ -51,7 +51,7 @@ live_score.Graphical_measure.prototype.extract_measure_info = function(
 * is_note
 *   checks if a given score_object is a note
 * args
-*   score_object
+*   note_object
 *     an object, created by Vexflow that is displayed in the score
 * returns
 *   a boolean value denoting whether the score_object is a note
@@ -69,8 +69,8 @@ live_score.Graphical_measure.prototype.add_note = function(note_object,
     var note_head = note_object.note_heads[i];
     var pitch = note_object.keys[i];
 
-    var gn = new live_score.graphical_note();
-    gn.extract_positional_info(score_object,measure_position,pitch);
+    var gn = new live_score.Graphical_note();
+    gn.extract_positional_info(note_head,measure_position,pitch);
 
     this.notes.push(gn);
   }
@@ -88,17 +88,45 @@ live_score.Graphical_measure.prototype.contains = function(graphical_object){
 *   graphical_object
 *     a graphical_object containing the coordinates being checked against the
 *     coordinates of the notes in the score
-* returns
 *   note_info
 *     a struct, described in structs.js, with information about the note
+* returns
+*   none
 */
-live_score.Graphical_measure.prototype.lookup_note = function(graphical_object){
-  var note_info = null;
-  for(var i = 0; i < this.notes.length && !note_info; i++){
-    if(this.notes[i].contains(graphical_object)){
-      note_info = this.notes[i].get_note_info();
+live_score.Graphical_measure.prototype.get_note_info = function(graphical_object,
+  note_info, is_new_note){
+
+  if(is_new_note){
+    note_info.x_position = this.get_measure_position_x(graphical_object);
+  }else{
+    var note_found = false;
+    for(var i = 0; i < this.notes.length && !note_found; i++){
+      if(this.notes[i].contains(graphical_object)){
+        this.notes[i].get_note_info(note_info);
+        note_found = true;
+      }
     }
+    note_info.note_found = note_found;
   }
-  return note_info;
+};
+
+/**
+* get_measure_position_x
+*   determines where within a measure a given position is located, this
+*   is used to determine the final x position of the click in relation to
+*   other notes in the score
+* args
+*   graphical_object
+*     coordinates of the new note 
+* returns
+*   fractional_x_position
+*     the percentage of the way through the measure that the position starts
+*/
+live_score.Graphical_measure.prototype.get_measure_position_x = function(
+  graphical_object){
+  var measure_length = this.bounds.end_x - this.bounds.start_x;
+  var position_in_measure = graphical_object.start_x - this.bounds.start_x;
+  var fractional_x_position = position_in_measure/measure_length;
+  return fractional_x_position;
 };
 

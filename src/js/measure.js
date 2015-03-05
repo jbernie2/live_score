@@ -165,8 +165,6 @@ live_score.Measure.prototype.add_note = function(note_info){
 };
 
 live_score.Measure.prototype.remove_note = function(note_info){
-  note_info.quantized_tick_position = this.quantize_position(
-    note_info.quantization,note_info.x_position);
   this.remove_note_from_measure(note_info);
   return true;
 };
