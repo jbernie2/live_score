@@ -67,7 +67,8 @@ live_score.Graphical_measure.prototype.add_note = function(note_object,
 
   for(var i = 0; i < note_object.note_heads.length; i++){
     var note_head = note_object.note_heads[i];
-    var pitch = note_object.keys[i];
+    var pitch = note_object.keyProps[i].key + "/" + 
+      note_object.keyProps[i].octave;
 
     var gn = new live_score.Graphical_note();
     gn.extract_positional_info(note_head,measure_position,pitch);

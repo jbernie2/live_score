@@ -19,7 +19,8 @@ live_score.Graphical_note.prototype.extract_note_info = function(note_head){
 
   this.bounds.start_x = note_head.x;
   this.bounds.end_x = this.bounds.start_x + note_head.glyph.head_width;
-  this.bounds.start_y = note_head.y;
+  this.bounds.start_y = note_head.y - 
+    (note_head.stave.getSpacingBetweenLines()/2);
   this.bounds.end_y = this.bounds.start_y + note_head.stave.
     getSpacingBetweenLines();
 };
