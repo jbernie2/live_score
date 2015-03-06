@@ -1,10 +1,7 @@
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="style.css">
   </head>
   <body>
-    <h1 id="page_header"> Live Score v0.2.0 Demo </h1>
-
     <div id="live_score_main_panel">
       <div id="control_panel">
         <div id="cursor_panel">
@@ -15,25 +12,20 @@
         </div>
       </div>
       <canvas id="score_panel"> </canvas>
+      <div id="mouse_tracker">0,0</div>
     </div>
-
-    <div id="page_footer">
-      <span id="email"> email: 
-        <a href="john.b.bernier@gmail.com">
-          john.b.bernier@gmail.com
-        </a>
-      </span>
-      <span id="github"> github: 
-        <a href="https://github.com/jbernie2/live_score">
-          https://github.com/jbernie2/live_score
-        </a>
-      </span>
-    </div>
-  
   </body>
   <script type="text/javascript">
     window.onload = function(){
       var score_editor = new live_score.Score_editor("live_score_main_panel");
+ 
+      var score_panel = score_editor.ui.score_panel.score_canvas;
+      score_panel.addEventListener('mousemove',function(e){
+        var x = e.clientX - score_panel.offsetLeft;
+        var y = e.clientY - score_panel.offsetTop;
+        var mouse_tracker = document.getElementById("mouse_tracker");
+        mouse_tracker.innerHTML = x +", "+ y;
+      }, false);
     };
   </script>
     <script src='live_score-debug.js'></script>

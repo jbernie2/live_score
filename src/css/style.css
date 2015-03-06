@@ -1,0 +1,38 @@
+body{
+  margin:0px;
+  background-color: #354458;
+  text-align:center;
+} 
+
+h1 {
+  font-family: "open-sans",sans-serif;
+  font-size: 32px;
+  line-height: 50px;
+  margin-bottom: 20px;
+  background-color: #354458;
+  color: #f0f0f0;
+}
+
+a {
+  color: #aaaaaa;
+}
+
+#live_score_main_panel {
+  padding-top:50px;
+  background-color: #fff;
+  height:200px;
+}
+
+#page_footer {
+  margin-top:20px;
+  float:bottom;
+  color: #f0f0f0;
+}
+
+#email {
+  margin-right:10px;
+}
+
+#github {
+  margin-left:10px;
+}

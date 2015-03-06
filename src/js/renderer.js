@@ -102,7 +102,7 @@ live_score.Renderer.prototype.render_score = function(staves){
 
   for(var i = 0; i < staves.length; i++){
  
-    var vexflow_stave = new Vex.Flow.Stave(10,0,2000);
+    var vexflow_stave = new Vex.Flow.Stave(10,0,1000);
     vexflow_stave.addClef(staves[i].clef);
 
     var vexflow_voices = this.render_voices(staves[i].get_total_num_beats(),

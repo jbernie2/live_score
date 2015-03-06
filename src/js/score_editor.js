@@ -114,18 +114,16 @@ live_score.Score_editor.prototype.add_measures = function(event_info){
 */
 live_score.Score_editor.prototype.add_note = function(event_info){
   
-  console.log("add_note");
-  
   var note_info = this.gs.get_new_note_position(event_info);
-  var staves = this.ms.add_note(note_info);
-  this.renderer.render_score(staves);
-  this.renderer.display_score();
-  this.gs.update(this.renderer);
+  if(note_info.valid_input){
+    var staves = this.ms.add_note(note_info);
+    this.renderer.render_score(staves);
+    this.renderer.display_score();
+    this.gs.update(this.renderer);
+  }
 };
 
 live_score.Score_editor.prototype.remove_note = function(event_info){
- 
-  console.log("remove_note");
  
   var note_info = this.gs.get_note_position(event_info);
   if(note_info.note_found){

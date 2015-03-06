@@ -82,6 +82,9 @@ live_score.Graphical_state.prototype.get_note_info = function(graphical_object,
       this.staves[i].get_note_info(graphical_object,note_info,is_new_note);
     }
   }
+  note_info.stave_found = stave_found;
+  note_info.valid_input = note_info.stave_found && note_info.measure_found;
+  
   return note_info;
 };
 
