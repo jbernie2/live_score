@@ -20,9 +20,9 @@ rendering API.
 
 Install Prerequisites:
 
-[node js](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
-[npm](http://blog.npmjs.org/post/85484771375/how-to-install-npm)
-[grunt-cli](http://gruntjs.com/getting-started)
+  1. [node js](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
+  2. [npm](http://blog.npmjs.org/post/85484771375/how-to-install-npm)
+  3. [grunt-cli](http://gruntjs.com/getting-started)
 
 
 Clone This Repo:
