@@ -18,16 +18,21 @@ rendering API.
 
 ## Developing live_score
 
-Clone this repo:
+Clone This Repo:
 
     $ git clone https://github.com/jbernie2/live_score.git
 
-Install dependencies via NPM:
+Install Prerequisites
+    [node js](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager) 
+    [npm](http://blog.npmjs.org/post/85484771375/how-to-install-npm)
+    [grunt-cli](http://gruntjs.com/getting-started)
+
+Install Dependencies Via NPM:
 
     $ cd live_score
     $ npm install
 
-Building the project
+Building The Project
 
     $ grunt
 
