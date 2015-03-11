@@ -123,6 +123,15 @@ live_score.Score_editor.prototype.add_note = function(event_info){
   }
 };
 
+/**
+* remove_note
+*   removes notes from the score
+* args
+*   event_info
+*     information about the ui event, will be interpreted by Graphical_state
+* returns
+*   none
+*/
 live_score.Score_editor.prototype.remove_note = function(event_info){
  
   var note_info = this.gs.get_note_position(event_info);

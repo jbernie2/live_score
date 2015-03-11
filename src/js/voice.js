@@ -1,5 +1,6 @@
 live_score         = require("./live_score.js");
 live_score.Measure = require("./measure.js");
+
 /**
 * Voice
 *   Constructor for the live_score.Voice object
@@ -10,7 +11,6 @@ live_score.Measure = require("./measure.js");
 * returns
 *   none
 */
-
 live_score.Voice = function(measure_meta_data){
 
   /**
@@ -55,6 +55,16 @@ live_score.Voice.prototype.add_note = function(note_info){
   return this.measures[note_info.measure_num].add_note(note_info);
 };
 
+/**
+* remove_note
+*   removes a note from a measure
+* args
+*   note_info
+*     a struct (see structs.js) that contiains information about the
+*     note being removed
+* returns
+*   none
+*/
 live_score.Voice.prototype.remove_note = function(note_info){
   return this.measures[note_info.measure_num].remove_note(note_info);
 };

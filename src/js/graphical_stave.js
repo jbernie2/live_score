@@ -1,11 +1,39 @@
 live_score = require("./live_score.js");
+live_score.Graphical_object = require("./graphical_object.js");
+live_score.Graphical_measure = require("./graphical_measure.js");
 
 live_score.Graphical_stave = function(){
+
+  /**
+  * a Graphical_object (see graphical_object.js) containing the coordinate 
+  * boundaries of the stave
+  */
   this.bounds = new live_score.Graphical_object();
+
+  /**
+  * the distance between the ledger lines in the stave
+  */
   this.space_between_notes = 0;
+
+  /**
+  * an array of Graphical_measure objects (see graphical_measure.js) contained
+  * with in the bounds of the stave
+  */
   this.measures = [];
 };
 
+/**
+* extract_positional_info
+*   parses the score information into individual measures, and extracs the
+*   stave's positional information from the score
+* args
+*   stave
+*     a vexflow stave object from which positional information is extracted
+*   stave_contents
+*     an array of vexflow objects contained within the stave
+* returns
+*   none
+*/
 live_score.Graphical_stave.prototype.extract_positional_info = function(stave,
   stave_contents){
 
@@ -82,7 +110,18 @@ live_score.Graphical_stave.prototype.calculate_space_between_notes =
   return space_between_chromatic_notes;
 };
 
-live_score.Graphical_stave.prototype.add_measure = function(score_object,
+/**
+* add_measure
+*   adds a measure to the array of measures contained with the stave.
+* args
+*   barline_object
+*     a vexflow object containing the end bounds of a measure
+*   measure_contents
+*     an array of vexflow objects contained within the measure
+* returns
+*     none
+*/
+live_score.Graphical_stave.prototype.add_measure = function(barline_object,
   measure_contents){
   
   var gm = new live_score.Graphical_measure();
@@ -90,10 +129,20 @@ live_score.Graphical_stave.prototype.add_measure = function(score_object,
   if(this.measures.length > 0){
     previous_gm = this.measures[this.measures.length - 1].bounds;
   }
-  gm.extract_positional_info(previous_gm,score_object,measure_contents);
+  gm.extract_positional_info(previous_gm,barline_object,measure_contents);
   this.measures.push(gm);
 };
 
+/**
+* contains
+*   checks if a set of coordinates is within the bounds of the stave
+* args
+*   graphical_object
+*     a Graphical_object (see graphical_object.js) containing coordinates
+* returns
+*   a boolean of whether the area described by graphical_object overlaps with
+*   the stave
+*/
 live_score.Graphical_stave.prototype.contains = function(graphical_object){
   return this.bounds.intersects_area(graphical_object);
 };
@@ -149,3 +198,5 @@ live_score.Graphical_stave.prototype.get_measure_position_y = function(
   note_distance_from_top = Math.round(note_distance_from_top);
   return note_distance_from_top;
 };
+
+module.exports = live_score.Graphical_stave;

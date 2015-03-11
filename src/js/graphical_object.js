@@ -1,4 +1,5 @@
 live_score = require("./live_score.js");
+
 /**
 * Graphical_object
 *   Constructor for the Graphical_object object. This object is used to denote

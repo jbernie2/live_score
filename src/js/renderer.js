@@ -1,3 +1,4 @@
+Vex = require("vexflow");
 live_score = require("./live_score.js");
 
 /**

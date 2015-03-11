@@ -41,13 +41,6 @@ live_score.Ui = function(event_controller, score_editor_div_id){
 
 };
 
-/*
-live_score.Ui.prototype.attach_panel = function(ui_object){
-  var panel = ui_object.get_panel();
-  this.score_editor_div.appendChild(this.score_canvas);
-};
-*/
-
 /**
 * get_score_panel
 *   a getter for the score_panel 

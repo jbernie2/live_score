@@ -61,6 +61,17 @@ live_score.Note.prototype.add_note = function(note_info){
   this.pitches.push({"pitch":pitch,"length":length,"type":type});
 };
 
+/**
+* remove_note
+*   attemps to remove note from measure
+* args
+*   note_info
+*     a struct (see structs.js) that contiains information about the
+*     note being removed
+* returns
+*   is_empty
+*     a boolean denoting whether there are any notes left at this position
+*/
 live_score.Note.prototype.remove_note = function(note_info){
   var pitch = note_info.pitch;
   var is_empty = false;
@@ -100,11 +111,18 @@ live_score.Note.prototype.is_rest = function(){
   return (this.type === live_score.rest_type);
 };
 
+/**
+* remove_note
+*   makes the note render as a rest
+* args
+*   none
+* returns
+*   none
+*/
 live_score.Note.prototype.make_rest = function(){
   var pitch = live_score.rest_pitch;
   this.type = live_score.rest_type;
   this.pitches.push({"pitch":pitch,"length":length,"type":this.type});
 };
-
 
 module.exports = live_score.Note;

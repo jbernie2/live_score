@@ -1,12 +1,49 @@
 live_score = require("./live_score.js");
-live_score.structs = require("./structs.js");
+live_score.Graphical_object = require("./graphical_object.js");
 
+/**
+* Graphical_note
+*   stores positional and musical information about a note displayed in the 
+*   score
+* args
+*   none
+* returns
+*   none
+*/
 live_score.Graphical_note = function(){
+
+  /**
+  * a Graphical_object (see graphical_object.js) containing the coordinate 
+  * boundaries of the note
+  */
   this.bounds = new live_score.Graphical_object();
+
+  /**
+  * The number of ticks that have occurred in the measure before this note
+  */
   this.position = 0;
+
+  /**
+  * The pitch of the note, formatted as follows D/5, D being the note, and 5 
+  * being the octave
+  */
   this.pitch = "";
 };
 
+/**
+* extract_positional_info
+*   named for the sake of continuity, sets the positional and musical values of
+*   the note
+* args
+*   note
+*     a vexflow note object from which positional information is extracted
+*   measure_position
+*     the number of ticks that have occurred in the measure before this note
+*   pitch
+*     the musical pitch of the note
+* returns
+*   none
+*/
 live_score.Graphical_note.prototype.extract_positional_info = function(note,
   measure_position,pitch){
 
@@ -15,6 +52,16 @@ live_score.Graphical_note.prototype.extract_positional_info = function(note,
   this.pitch = pitch;
 };
 
+/**
+* extract_note_info
+*   extracts positional data from the vexflow note_head object
+* args
+*   note_head
+*     the vexflow object containing the graphical positioning information of
+*     the note head of the note
+* returns
+*   none
+*/
 live_score.Graphical_note.prototype.extract_note_info = function(note_head){
 
   this.bounds.start_x = note_head.x;
@@ -25,11 +72,33 @@ live_score.Graphical_note.prototype.extract_note_info = function(note_head){
     getSpacingBetweenLines();
 };
 
+/**
+* contains
+*   checks if a set of coordinates is within the bounds of the note
+* args
+*   graphical_object
+*     a Graphical_object (see graphical_object.js) containing coordinates
+* returns
+*   a boolean of whether the area described by graphical_object overlaps with
+*   the note
+*/
 live_score.Graphical_note.prototype.contains = function(graphical_object){
   return this.bounds.intersects_area(graphical_object);
 };
 
+/**
+* get_note_info
+*   fills in a note_info struct (see structs.js) with information about this
+*   note, used for determining whether a given note was clicked on
+* args
+*   note_info
+*     note_info struct (see structs.js) with information about this note
+* returns
+*   none
+*/
 live_score.Graphical_note.prototype.get_note_info = function(note_info){
   note_info.pitch = this.pitch;
   note_info.quantized_tick_position = this.position;
 };
+
+module.exports = live_score.Graphical_note;

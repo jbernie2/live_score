@@ -1,10 +1,44 @@
 live_score = require("./live_score.js");
+live_score.Graphical_object = require("./graphical_object.js");
+live_score.Graphical_note = require("./graphical_note.js");
 
+/**
+* Graphical_measure
+*   stores positional information about the measured displayed in the score
+* args
+*   none
+* returns
+*   none
+*/
 live_score.Graphical_measure = function(){
+
+  /**
+  * a Graphical_object (see graphical_object.js) containing the coordinate 
+  * boundaries of a measure
+  */
   this.bounds = new live_score.Graphical_object();
+  
+  /**
+  * an array of Graphical_note objects (see graphical_note.js) representing the
+  * notes contained in this measure
+  */
   this.notes = [];
 };
 
+/**
+* extract_posiitonal_info
+*   takes vexflow objects and determines where they are rendered on the score
+* args
+*   previous_measure
+*     a graphical_object containing the bounds of the previous measure
+*   current_measure
+*     an object representing a barline, created by Vexflow, that is displayed
+*     in the score
+*   measure_contents
+*     an array of vexflow objects rendered within the bounds of the measure
+* returns
+*   none
+*/
 live_score.Graphical_measure.prototype.extract_positional_info = function(
   previous_measure,current_measure,measure_contents){
   
@@ -51,7 +85,7 @@ live_score.Graphical_measure.prototype.extract_measure_info = function(
 * is_note
 *   checks if a given score_object is a note
 * args
-*   note_object
+*   score_object
 *     an object, created by Vexflow that is displayed in the score
 * returns
 *   a boolean value denoting whether the score_object is a note
@@ -62,6 +96,18 @@ live_score.Graphical_measure.prototype.is_note = function(score_object){
           score_object.duration !== "b");
 };
 
+/**
+* add_note
+*   adds a Graphical_note (see Graphical_note.js) to the array of notes 
+*   contained within the measure
+* args
+*   note_object
+*     an object, created by Vexflow that is displayed in the score
+*   measure_position
+*     the starting position of the note being added (in ticks)
+* returns
+*   none
+*/
 live_score.Graphical_measure.prototype.add_note = function(note_object,
   measure_position){
 
@@ -77,6 +123,16 @@ live_score.Graphical_measure.prototype.add_note = function(note_object,
   }
 };
 
+/**
+* contains
+*   checks if a set of coordinates is within the bounds of the measure
+* args
+*   graphical_object
+*     a Graphical_object (see graphical_object.js) containing coordinates
+* returns
+*   a boolean of whether the area described by graphical_object overlaps with
+*   the measure
+*/
 live_score.Graphical_measure.prototype.contains = function(graphical_object){
   return this.bounds.intersects_area(graphical_object);
 };
@@ -131,3 +187,4 @@ live_score.Graphical_measure.prototype.get_measure_position_x = function(
   return fractional_x_position;
 };
 
+module.exports = live_score.Graphical_measure;

@@ -149,10 +149,10 @@ live_score.Measure.prototype.optimal_rest_length = function(beat_position,num_ti
 
 /**
 * add_note
-*   adds a note to a measure
+*   adds a note to the measure
 * args
 *   note_info
-*     a struct, described in structs.js, that contiains information about the
+*     a struct (see structs.js) that contiains information about the
 *     note being inserted
 * returns
 *   a boolean of whether or not the note was inserted successfully 
@@ -164,6 +164,16 @@ live_score.Measure.prototype.add_note = function(note_info){
   return true;
 };
 
+/**
+* remove_note
+*   removes a note from the measure
+* args
+*   note_info
+*     a struct (see structs.js) that contiains information about the
+*     note being removed
+* returns
+*   a boolean of whether or not the note was removed successfully 
+*/
 live_score.Measure.prototype.remove_note = function(note_info){
   this.remove_note_from_measure(note_info);
   return true;
@@ -386,6 +396,16 @@ live_score.Measure.prototype.insert_new_note = function(note_to_split_index,
   this.notes.splice(note_to_split_index,0,new_note);
 };
 
+/**
+* remove_note_from_measure
+*   removes a note from the measure
+* args
+*   note_info
+*     a struct (see structs.js) that contiains information about the
+*     note being removed
+* returns
+*   none
+*/
 live_score.Measure.prototype.remove_note_from_measure = function(note_info){
   var note_position = note_info.quantized_tick_position;
   var current_position = 0;

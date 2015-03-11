@@ -87,11 +87,28 @@ live_score.structs.create_note_info = function(){
     */
     quantization:0,
 
+    /**
+    * the number of ticks (rhythmic units) that have occurred before this note
+    * in the containing measure
+    */
     tick_position:0,
 
+    /**
+    * the number of ticks (rhythmic units) that have occurred before this note
+    * in the containing measure, quantized to a given beat level
+    */
     quantized_tick_position:0,
+    
+    /**
+    * a boolean denoting whether a note was found at a given position
+    */
+    note_found:0,
 
-    note_found:0
+    /**
+    * a boolean denoting whether an inserted note is within the musical bounds
+    * of the containing stave/measure
+    */
+    valid_input:0
   };
 };
 

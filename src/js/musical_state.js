@@ -70,6 +70,16 @@ live_score.Musical_state.prototype.add_note = function(note_info){
   return this.staves;
 };
 
+/**
+* remove_note
+*   removes a note from a measure
+* args
+*   note_info
+*     a struct (see structs.js) that contiains information about the
+*     note being removed
+* returns
+*   a boolean of whether or not the note was removed successfully 
+*/
 live_score.Musical_state.prototype.remove_note = function(note_info){
   this.staves[note_info.stave_num].remove_note(note_info);
   return this.staves;

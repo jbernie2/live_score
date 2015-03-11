@@ -1,6 +1,5 @@
 live_score = require("./live_score.js");
 live_score.structs = require("./structs.js");
-live_score.Graphical_object = require("./graphical_object.js");
 
 /**
 * Score_panel

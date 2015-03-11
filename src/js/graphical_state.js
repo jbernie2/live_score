@@ -1,4 +1,5 @@
 live_score = require("./live_score.js");
+live_score.Graphical_stave = require("./graphical_stave.js");
 live_score.structs = require("./structs.js");
 
 /**
@@ -70,6 +71,21 @@ live_score.Graphical_state.prototype.update = function(renderer){
   }
 }; 
 
+/**
+* get_note_info
+*   queries the graphical_state to either determine the position of click
+*   within the score, or determine whether a note had been clicked on
+* args
+*   graphical_object
+*     a Graphical_object (See graphical_object.js) containing the coordinates
+*     being looked up
+*   is_new_note
+*     a boolean denoting whether an existing note is being looked up, or a new
+*     note is being added
+* returns
+*   note_info
+*     information about the note that was looked up
+*/
 live_score.Graphical_state.prototype.get_note_info = function(graphical_object,
   is_new_note){
   
@@ -112,6 +128,18 @@ live_score.Graphical_state.prototype.get_new_note_position = function(
   return note_info;
 };
 
+/**
+* get_note_position
+*   determines if a position clicked in the score is a note
+* args
+*   event_info
+*     a struct (see structs.js) containing information about the
+*     ui event
+* returns
+*   note_info
+*     a struct (see structs.js) containing information about whether the
+*     position clicked contained a note
+*/
 live_score.Graphical_state.prototype.get_note_position = function(
   event_info){
  

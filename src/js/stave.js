@@ -80,6 +80,16 @@ live_score.Stave.prototype.add_note = function(note_info){
   }
 };
 
+/**
+* remove_note
+*   removes a note from a measure
+* args
+*   note_info
+*     a struct (see structs.js) that contiains information about the
+*     note being removed
+* returns
+*   none
+*/
 live_score.Stave.prototype.remove_note = function(note_info){
   var note_removed = false;
   for(var i = 0; i < this.voices.length && !note_removed; i++){
