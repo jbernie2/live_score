@@ -80,6 +80,7 @@ live_score.Measure.prototype.fill_space_with_rests = function(start_tick,
     var beat_level = this.calculate_beat_level(ticks_so_far);
     var rest_length = this.optimal_rest_length(beat_level, ticks_left);
     ticks_left = ticks_left - live_score.note_length_to_ticks(rest_length);
+    ticks_so_far += live_score.note_length_to_ticks(rest_length);
     rests.push(new live_score.Note(live_score.rest_pitch,rest_length,
       live_score.rest_type));
   }
