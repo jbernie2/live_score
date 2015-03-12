@@ -114,6 +114,14 @@ live_score.Measure.prototype.calculate_beat_level = function(total_ticks){
   return beat_level;
 };
 
+live_score.Measure.prototype.calculate_position_from_index = function(index){
+  var position = 0;
+  for(var i = 0; i < index; i++){
+    position += live_score.note_length_to_ticks(this.notes[i].length);
+  }
+  return position;
+};
+
 /**
 * optimal_rest_length
 *   given the largest possible rest that can appear and the length of the
@@ -424,7 +432,59 @@ live_score.Measure.prototype.remove_note_from_measure = function(note_info){
   if(empty_note){
     var note_index = i-1;
     this.notes[note_index].make_rest();
+    this.merge_rests(note_index);
   }
+};
+
+live_score.Measure.prototype.merge_rests = function(rest_index){
+  
+  var first_rest_index = this.find_start_of_rest_sequence(rest_index);
+  var last_rest_index = this.find_end_of_rest_sequence(rest_index);
+  var start_tick = this.calculate_position_from_index(first_rest_index);
+
+  var end_tick = this.calculate_position_from_index(last_rest_index) +
+    live_score.note_length_to_ticks(this.notes[last_rest_index].length);
+
+  var rests = this.fill_space_with_rests(start_tick,end_tick);
+
+  var i = 0;
+  for(i = first_rest_index; i <= last_rest_index; i++){
+    this.notes.splice(first_rest_index,1);
+  }
+  for(i = rests.length - 1; i >= 0; i--){
+    this.notes.splice(first_rest_index,0,rests[i]);
+  }
+};
+
+live_score.Measure.prototype.find_start_of_rest_sequence = function(
+  rest_index){
+  
+  var note_found = false;
+  var first_rest_index = rest_index;
+  for(var i = rest_index; i >= 0 && !note_found; i--){
+    if(this.notes[i].is_rest()){
+      first_rest_index = i;
+    }
+    else if(this.notes[i].is_note()){
+      note_found = true;
+    }
+  }
+  return first_rest_index;
+};
+
+live_score.Measure.prototype.find_end_of_rest_sequence = function(rest_index){
+  
+  var note_found = false;
+  var last_rest_index = rest_index;
+  for(var i = rest_index; i < this.notes.length && !note_found; i++){
+    if(this.notes[i].is_rest()){
+      last_rest_index = i;
+    }
+    else if(this.notes[i].is_note()){
+      note_found = true;
+    }
+  }
+  return last_rest_index;
 };
 
 module.exports = live_score.Measure;
