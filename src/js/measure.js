@@ -270,6 +270,20 @@ live_score.Measure.prototype.place_note_in_measure = function(note_info){
   }
 };
 
+/**
+* space_after_note
+*   determines the amount of space a note can take up without overlapping with
+*   the next note in the measure
+* args
+*   note_position
+*     the position of the note being inserted (in ticks)
+*   current_position
+*     the position of the position counter used in place_note_in_measure.
+*     denotes the end point (in ticks) of the current note
+* returns
+*   space_after_note
+*     the amount of space (in ticks) after the starting position of the note
+*/
 live_score.Measure.prototype.space_after_note = function(note_position,
   current_position,current_index){
 
@@ -286,6 +300,22 @@ live_score.Measure.prototype.space_after_note = function(note_position,
   return space_after_note;
 };
 
+/**
+* calculate_display_length
+*   determines the size the note will be rendered as, this is based on the 
+*   length of the note, the position of the note in the measure, and how close
+*   it is to other notes. 
+* args
+*   note_info
+*     a struct (see structs.js) with information about the note being inserted
+* returns
+*   display_length
+*     the maximum length that the note can be without violating any constraints.
+*     including: 
+*       the note's length being longer than the beat_level
+*       the note not overlapping with the following note
+*       the note not exceeding its length
+*/
 live_score.Measure.prototype.calculate_display_length = function(note_info){
  
   var beat_level = note_info.beat_level;
@@ -302,6 +332,26 @@ live_score.Measure.prototype.calculate_display_length = function(note_info){
   return display_length;
 };
 
+/**
+* shorten_previous_and_insert_note
+*   inserts a note into the measure in the case where the note being inserted
+*   overlaps with a note already in the meausre. The previous note is shortened
+*   to make room for the new note, the new note is inserted, and any extra
+*   space is filled with rests
+* args
+*   note_position
+*     the position of the note being inserted (in ticks)
+*   current_position
+*     the position of the position counter used in place_note_in_measure.
+*     denotes the end point (in ticks) of the current note
+*   note_to_split_index
+*     the index, in the notes array, of the note that is being split to make
+*     room for the new note.
+*   note_info
+*     a struct (see structs.js) with information about the note being inserted   
+* returns
+*   none
+*/
 live_score.Measure.prototype.shorten_previous_and_insert_note = function(
   note_position,current_position,note_to_split_index,note_info){
 
@@ -322,6 +372,26 @@ live_score.Measure.prototype.shorten_previous_and_insert_note = function(
     note_to_split_index);
 };
 
+/**
+* recalculate_note_info
+*   recreates the note_info struct of a note that has already been inserted
+*   in order to allow that note to be processed like a new note.
+* args
+*   note_position
+*     the position of the note being inserted (in ticks)
+*   current_position
+*     the position of the position counter used in place_note_in_measure.
+*     denotes the end point (in ticks) of the current note
+*   note_to_split_index
+*     the index, in the notes array, of the note that is being split to make
+*     room for the new note.
+*   note_info
+*     a struct (see structs.js) with information about the note being inserted   
+* returns
+*   old_note_info
+*     a new note_info struct with information about a note that has already
+*     been inserted into the measure
+*/
 live_score.Measure.prototype.recalculate_note_info = function(note_position,
     current_position,note_to_split_index,note_info){
 
@@ -338,6 +408,27 @@ live_score.Measure.prototype.recalculate_note_info = function(note_position,
   return old_note_info;
 };
 
+/**
+* insert_rests_between_shortened_note_and_new_note
+*   finds the end of the shortened note, and the beginning of the new note
+*   and fills the space remaining between them with rests.
+* args
+*   note_position
+*     the position of the note being inserted (in ticks)
+*   current_position
+*     the position of the position counter used in place_note_in_measure.
+*     denotes the end point (in ticks) of the current note
+*   note_to_split_index
+*     the index, in the notes array, of the note that is being split to make
+*     room for the new note.
+*   shortened_note
+*     the note whose length has been shortened to make room for the new note
+*   shortened_note_info
+*     a note_info struct (see structs.js) with information about the shortened
+*     note
+* returns
+*   none
+*/
 live_score.Measure.prototype.insert_rests_between_shortened_note_and_new_note =
   function(note_position,current_position,note_to_split_index,shortened_note,
   shortened_note_info){
@@ -361,6 +452,21 @@ live_score.Measure.prototype.insert_rests_between_shortened_note_and_new_note =
   }
 };
 
+/**
+* insert_shortened_note
+*   places the note the note that has been shortened to make room for the
+*   new note back into the measure
+* args
+*   shortened_note_info
+*     a note_info struct (see structs.js) with information about the shortened
+*     note
+*   shortened_note
+*     the note whose length has been shortened to make room for the new note
+*   index
+*     the position in the notes array where the note is to be inserted
+* returns
+*   none
+*/
 live_score.Measure.prototype.insert_shortened_note = function(
   shortened_note_info,shortened_note,index){
   shortened_note.length = shortened_note_info.display_length;
@@ -552,6 +658,15 @@ live_score.Measure.prototype.remove_note_from_measure = function(note_info){
   }
 };
 
+/**
+* merge_rests
+*   attempts to merge smaller rests together after a note has been removed
+* args
+*   rest_index
+*     the index of the rest that has replaced the removed note
+* returns
+*   none
+*/
 live_score.Measure.prototype.merge_rests = function(rest_index){
   
   var first_rest_index = this.find_start_of_rest_sequence(rest_index);
@@ -572,6 +687,17 @@ live_score.Measure.prototype.merge_rests = function(rest_index){
   }
 };
 
+/**
+* find_start_of_rest_sequence
+*   find the first position of rests that can potentially be merged into a 
+*   single longer rest
+* args
+*   rest_index
+*     the index of the rest that has replaced the removed note
+* returns
+*   first_rest_index
+*     the first rest in the series of rests that can be merged
+*/
 live_score.Measure.prototype.find_start_of_rest_sequence = function(
   rest_index){
   
@@ -588,6 +714,17 @@ live_score.Measure.prototype.find_start_of_rest_sequence = function(
   return first_rest_index;
 };
 
+/**
+* find_end_of_rest_sequence
+*   find the last position of rests that can potentially be merged into a 
+*   single longer rest
+* args
+*   rest_index
+*     the index of the rest that has replaced the removed note
+* returns
+*   last_rest_index
+*     the last rest in the series of rests that can be merged
+*/
 live_score.Measure.prototype.find_end_of_rest_sequence = function(rest_index){
   
   var note_found = false;

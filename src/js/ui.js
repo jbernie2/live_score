@@ -32,11 +32,21 @@ live_score.Ui = function(event_controller, score_editor_div_id){
   */
   this.score_editor_div = document.getElementById(score_editor_div_id);
 
+  /**
+  * a struct (see structs.js) that keeps track of the current state of the UI
+  */
   this.ui_info = live_score.structs.create_ui_info();
 
+  /**
+  * the panel that contains the canvas on which the score is drawn 
+  * (see score_panel.js)
+  */
   this.score_panel = new live_score.Score_panel(event_controller,
     this.ui_info);
 
+  /**
+  * the panel that contains all the input controls (see control_panel.js)
+  */
   this.control_panel = new live_score.Control_panel(this.ui_info);
 
 };

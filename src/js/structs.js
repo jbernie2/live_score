@@ -82,7 +82,17 @@ live_score.structs.create_note_info = function(){
     */
     note_length:0,
 
+    /**
+    * the length of the note as it will be displayed in the score (can differ
+    * from the note_length)
+    */
     display_length:0,
+
+    /**
+    * the longest possible length the note can take up without overlapping with
+    * an adjacent note
+    */
+    max_length:0,
 
     /**
     * the beat level to which the note will be quantized before being inserted
@@ -101,6 +111,9 @@ live_score.structs.create_note_info = function(){
     */
     quantized_tick_position:0,
  
+    /**
+    * the position of the note in the measure in terms of beat that it lands on
+    */
     beat_level:0,
     
     /**

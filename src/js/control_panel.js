@@ -33,9 +33,15 @@ live_score.Control_panel = function(ui_info){
   this.remove_note_button.onclick = this.set_input_mode(
     live_score.remove_mode);
  
+  /**
+  * drop down menu that allows for selection of the note length
+  */
   this.note_select = document.getElementById("note_select");
   this.note_select.onchange = this.set_note_length();
  
+  /**
+  * drop down menu that allows for selection of the quantization size
+  */
   this.quantization_select = document.getElementById("quantization_select");
   this.quantization_select.onchange = this.set_quantization();
 
@@ -76,6 +82,15 @@ live_score.Control_panel.prototype.set_input_mode = function(input_mode){
   };
 };
 
+/**
+* set_note_length
+*   attaches a function to the note selection drop down menu. The function
+*   sets the length of the note to be inserted
+* args
+*   none
+* returns
+*   none
+*/
 live_score.Control_panel.prototype.set_note_length = function(){
   var ui_info = this.ui_info;
   return function(){
@@ -84,6 +99,15 @@ live_score.Control_panel.prototype.set_note_length = function(){
   };
 };
 
+/**
+* set_quantization
+*   attaches a function to the quantization selection drop down menu. The 
+*   function sets the quantization level
+* args
+*   none
+* returns
+*   none
+*/
 live_score.Control_panel.prototype.set_quantization = function(){
   var ui_info = this.ui_info;
   return function(){

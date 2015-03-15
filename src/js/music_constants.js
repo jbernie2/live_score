@@ -38,8 +38,14 @@ live_score.rest_type = "r";
 */
 live_score.note_type = "n";
 
+/**
+* the string denoting that the ui is in "insert mode"
+*/
 live_score.insert_mode = "insert";
 
+/**
+* the string denoting that the ui is in "remove mode"
+*/
 live_score.remove_mode = "remove";
 
 /**
@@ -160,6 +166,19 @@ live_score.ticks_to_note_length = function(ticks){
   return derived_note_length;
 };
 
+/**
+* note_length_greater_than
+*   compares to live_score.note_lengths to see if the first is larger than
+*   the second
+* args
+*   note_length_1
+*     the first note length
+*   note_length_2
+*     the second note length
+* returns
+*   a boolean denoting whether note_length_1 was longer than note_length_2
+*   based on there rhythmic lengths
+*/
 live_score.note_length_greater_than = function(note_length_1,note_length_2){
   return (note_length_1 < note_length_2);
 };

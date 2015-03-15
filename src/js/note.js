@@ -11,6 +11,11 @@ live_score = require("./live_score.js");
 *     the length that will be used to display all the notes in the score
 *   type
 *     denotes the type of note, either a rest or a musical note
+*   display_length
+*     only relevant for notes, not rests, determines the length of the note
+*     that will be rendered. This is so notes do not overlap eachother in the
+*     displayed score. A note's display length can differ from the length
+*     saved in pitches[]
 * returns
 *   none
 */
@@ -32,6 +37,9 @@ live_score.Note = function(pitch,length,type,display_length){
   */
   this.type = type;
 
+  /**
+  * (see function description)
+  */
   if(display_length && display_length !== 0){
     this.length = display_length;
   }
