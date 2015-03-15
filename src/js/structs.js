@@ -82,6 +82,8 @@ live_score.structs.create_note_info = function(){
     */
     note_length:0,
 
+    display_length:0,
+
     /**
     * the beat level to which the note will be quantized before being inserted
     */
@@ -98,6 +100,8 @@ live_score.structs.create_note_info = function(){
     * in the containing measure, quantized to a given beat level
     */
     quantized_tick_position:0,
+ 
+    beat_level:0,
     
     /**
     * a boolean denoting whether a note was found at a given position

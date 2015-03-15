@@ -14,7 +14,7 @@ live_score = require("./live_score.js");
 * returns
 *   none
 */
-live_score.Note = function(pitch,length,type){
+live_score.Note = function(pitch,length,type,display_length){
   
   /**
   * (see function description)
@@ -31,6 +31,10 @@ live_score.Note = function(pitch,length,type){
   * (see function description)
   */
   this.type = type;
+
+  if(display_length && display_length !== 0){
+    this.length = display_length;
+  }
 };
 
 /*

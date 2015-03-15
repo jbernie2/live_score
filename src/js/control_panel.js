@@ -33,6 +33,12 @@ live_score.Control_panel = function(ui_info){
   this.remove_note_button.onclick = this.set_input_mode(
     live_score.remove_mode);
  
+  this.note_select = document.getElementById("note_select");
+  this.note_select.onchange = this.set_note_length();
+ 
+  this.quantization_select = document.getElementById("quantization_select");
+  this.quantization_select.onchange = this.set_quantization();
+
   this.set_control_defaults();
 };
 
@@ -45,8 +51,12 @@ live_score.Control_panel = function(ui_info){
 *   none
 */
 live_score.Control_panel.prototype.set_control_defaults = function(){
-  this.ui_info.note_length = live_score.note_lengths.quarter;
-  this.ui_info.quantization = live_score.note_lengths.quarter;
+  
+  var note_length = parseInt(this.note_select.value,10);
+  var quantization = parseInt(this.quantization_select.value,10);
+  
+  this.ui_info.note_length = note_length;
+  this.ui_info.quantization = quantization;
   this.ui_info.input_mode = live_score.insert_mode;
 };
 
@@ -63,6 +73,22 @@ live_score.Control_panel.prototype.set_input_mode = function(input_mode){
   var ui_info = this.ui_info;
   return function(){
     ui_info.input_mode = input_mode;
+  };
+};
+
+live_score.Control_panel.prototype.set_note_length = function(){
+  var ui_info = this.ui_info;
+  return function(){
+    var note_length = parseInt(this.value,10);
+    ui_info.note_length = note_length;
+  };
+};
+
+live_score.Control_panel.prototype.set_quantization = function(){
+  var ui_info = this.ui_info;
+  return function(){
+    var quantization = parseInt(this.value,10);
+    ui_info.quantization = quantization;
   };
 };
 

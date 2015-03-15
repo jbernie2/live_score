@@ -8,7 +8,25 @@
           <button id="insert_note"> draw </button>
           <button id="remove_note"> erase </button>
         </div>
-        <div id="input_panel">
+        <div id="input_panel">note length:
+           <select id="note_select"> 
+            <option value="1">whole</option>
+            <option value="2">half</option>
+            <option value="4">quarter</option>
+            <option value="8">eighth</option>
+            <option value="16">sixteeth</option>
+            <option value="32">thirty-second</option>
+          </select> 
+        </div>
+        <div id="quantization_panel">quantization:
+          <select id="quantization_select">
+            <option value="1">whole</option>
+            <option value="2">half</option>
+            <option value="4">quarter</option>
+            <option value="8">eighth</option>
+            <option value="16">sixteeth</option>
+            <option value="32">thirty-second</option>
+          </select> 
         </div>
       </div>
       <canvas id="score_panel"> </canvas>

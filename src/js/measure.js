@@ -1,5 +1,6 @@
-live_score      = require("./live_score.js");
-live_score.Note = require("./note.js");
+live_score         = require("./live_score.js");
+live_score.structs = require("./structs.js");
+live_score.Note    = require("./note.js");
 
 /**
 * Measure
@@ -78,7 +79,7 @@ live_score.Measure.prototype.fill_space_with_rests = function(start_tick,
   var ticks_left = end_tick - start_tick;
   while(ticks_left > 0){
     var beat_level = this.calculate_beat_level(ticks_so_far);
-    var rest_length = this.optimal_rest_length(beat_level, ticks_left);
+    var rest_length = this.optimal_length(beat_level, ticks_left);
     ticks_left = ticks_left - live_score.note_length_to_ticks(rest_length);
     ticks_so_far += live_score.note_length_to_ticks(rest_length);
     rests.push(new live_score.Note(live_score.rest_pitch,rest_length,
@@ -124,9 +125,9 @@ live_score.Measure.prototype.calculate_position_from_index = function(index){
 };
 
 /**
-* optimal_rest_length
-*   given the largest possible rest that can appear and the length of the
-*   empty space, determines the optimal rest size to insert
+* optimal_length
+*   given the largest possible length that can appear and the length of the
+*   empty space, determines the largest note length that can be inserted
 * args
 *   beat_position
 *     the size of the largest possible rest that can be placed
@@ -137,7 +138,7 @@ live_score.Measure.prototype.calculate_position_from_index = function(index){
 *     the largest note length that is both within the bounds of the 
 *     beat_position and whose length is not larger than num_ticks
 */
-live_score.Measure.prototype.optimal_rest_length = function(beat_position,num_ticks){
+live_score.Measure.prototype.optimal_length = function(beat_position,num_ticks){
 
   var min_tick_difference = this.num_ticks;
   var best_fit_note = null;
@@ -169,6 +170,10 @@ live_score.Measure.prototype.optimal_rest_length = function(beat_position,num_ti
 live_score.Measure.prototype.add_note = function(note_info){
   note_info.quantized_tick_position = this.quantize_position(
     note_info.quantization,note_info.x_position);
+
+  note_info.beat_level = this.calculate_beat_level(
+    note_info.quantized_tick_position);
+
   this.place_note_in_measure(note_info);
   return true;
 };
@@ -238,7 +243,6 @@ live_score.Measure.prototype.quantize_position = function(quantization,position)
 *   none
 */
 live_score.Measure.prototype.place_note_in_measure = function(note_info){
-  
   var note_position = note_info.quantized_tick_position;
   var current_position = 0;
   var note_added = false;
@@ -246,11 +250,17 @@ live_score.Measure.prototype.place_note_in_measure = function(note_info){
     if(current_position === note_position && this.notes[i].is_note()){
       this.notes[i].add_note(note_info);
       note_added = true;
-    }else if(current_position > note_position){
-      this.split_rest_and_insert_note(current_position,i-1,note_info);
+    }else if(current_position > note_position && this.notes[i-1].is_note()){
+      this.shorten_previous_and_insert_note(note_position,current_position,i-1,
+        note_info);
+      note_added = true;
+    }else if(current_position > note_position && this.notes[i-1].is_rest()){
+      this.split_rest_and_insert_note(note_position,current_position,i-1,
+        note_info);
       note_added = true;
     }else if(current_position === note_position && this.notes[i].is_rest()){
-      this.remove_rest_and_insert_note(current_position,i,note_info);
+      this.remove_rest_and_insert_note(note_position,current_position,i,
+        note_info);
       note_added = true;
     }else{
       var note_length = this.notes[i].length;
@@ -258,6 +268,103 @@ live_score.Measure.prototype.place_note_in_measure = function(note_info){
       current_position += tick_length;
     }
   }
+};
+
+live_score.Measure.prototype.space_after_note = function(note_position,
+  current_position,current_index){
+
+  var note_found = false;
+  var space_after_note = current_position - note_position;
+  for(var i = current_index; i < this.notes.length && !note_found; i++){
+    if(!this.notes[i].is_note()){
+      space_after_note += live_score.note_length_to_ticks(
+        this.notes[i].length);
+    }else{
+      note_found = true;
+    }
+  }
+  return space_after_note;
+};
+
+live_score.Measure.prototype.calculate_display_length = function(note_info){
+ 
+  var beat_level = note_info.beat_level;
+  var length = note_info.note_length;
+  var max_length = this.optimal_length(beat_level,note_info.max_length);
+  var display_length = length;
+  
+  if(live_score.note_length_greater_than(length,max_length)){
+    display_length = max_length;
+  }
+  if(live_score.note_length_greater_than(max_length,beat_level)){
+    display_length = beat_level;
+  }
+  return display_length;
+};
+
+live_score.Measure.prototype.shorten_previous_and_insert_note = function(
+  note_position,current_position,note_to_split_index,note_info){
+
+  var shortened_note_info = this.recalculate_note_info(note_position,
+    current_position,note_to_split_index,note_info);
+
+  note_info.max_length = this.space_after_note(note_position,current_position,
+    note_to_split_index + 1);
+  note_info.display_length = this.calculate_display_length(note_info);
+
+  var shortened_note = this.remove_from_measure(note_to_split_index);
+
+  this.insert_rests_after_note(current_position,note_to_split_index,note_info);
+  this.insert_new_note(note_to_split_index,note_info);
+  this.insert_rests_between_shortened_note_and_new_note(note_position,
+    current_position,note_to_split_index,shortened_note,shortened_note_info);
+  this.insert_shortened_note(shortened_note_info,shortened_note,
+    note_to_split_index);
+};
+
+live_score.Measure.prototype.recalculate_note_info = function(note_position,
+    current_position,note_to_split_index,note_info){
+
+  var old_note_info = live_score.structs.create_note_info(); 
+  var old_note_length_in_ticks = live_score.note_length_to_ticks(
+    this.notes[note_to_split_index].length);
+  var start_of_old_note = current_position - old_note_length_in_ticks;
+
+  old_note_info.beat_level = this.calculate_beat_level(start_of_old_note);
+  old_note_info.max_length = note_position - start_of_old_note;
+  old_note_info.display_length = this.calculate_display_length(
+    old_note_info);
+
+  return old_note_info;
+};
+
+live_score.Measure.prototype.insert_rests_between_shortened_note_and_new_note =
+  function(note_position,current_position,note_to_split_index,shortened_note,
+  shortened_note_info){
+ 
+  var start_of_shortened_note = current_position - 
+    live_score.note_length_to_ticks(shortened_note.length);
+  var length_of_shortened_note = live_score.note_length_to_ticks(
+    shortened_note_info.display_length);
+  var end_of_shortened_note = start_of_shortened_note + 
+    length_of_shortened_note; 
+  
+  var length_of_new_note = current_position - note_position;
+  var start_of_new_note = current_position - length_of_new_note;
+
+  var start_position = end_of_shortened_note;
+  var end_position = start_of_new_note;
+
+  var rests = this.fill_space_with_rests(start_position,end_position);
+  for(var i = rests.length - 1; i >= 0; i--){
+    this.notes.splice(note_to_split_index,0,rests[i]);
+  }
+};
+
+live_score.Measure.prototype.insert_shortened_note = function(
+  shortened_note_info,shortened_note,index){
+  shortened_note.length = shortened_note_info.display_length;
+  this.notes.splice(index,0,shortened_note);
 };
 
 /**
@@ -275,9 +382,13 @@ live_score.Measure.prototype.place_note_in_measure = function(note_info){
 *   none
 */
 live_score.Measure.prototype.remove_rest_and_insert_note = function(
-  current_position,note_to_split_index,note_info){
+  note_position,current_position,note_to_split_index,note_info){
   
-  var note_to_split = this.remove_rest(note_to_split_index);
+  note_info.max_length = this.space_after_note(note_position,current_position,
+    note_to_split_index);
+  note_info.display_length = this.calculate_display_length(note_info);
+
+  var note_to_split = this.remove_from_measure(note_to_split_index);
   var end_of_rest = current_position + live_score.note_length_to_ticks(
     note_to_split.length);
   this.insert_rests_after_note(end_of_rest,note_to_split_index,note_info);
@@ -299,9 +410,13 @@ live_score.Measure.prototype.remove_rest_and_insert_note = function(
 *   none
 */
 live_score.Measure.prototype.split_rest_and_insert_note = function(
-  current_position,note_to_split_index,note_info){
-  
-  var note_to_split = this.remove_rest(note_to_split_index);
+  note_position,current_position,note_to_split_index,note_info){
+   
+  note_info.max_length = this.space_after_note(note_position,current_position,
+    note_to_split_index + 1);    
+  note_info.display_length = this.calculate_display_length(note_info);
+
+  var note_to_split = this.remove_from_measure(note_to_split_index);
   this.insert_rests_after_note(current_position,note_to_split_index,note_info);
   this.insert_new_note(note_to_split_index,note_info);
   this.insert_rests_before_note(current_position,note_to_split_index,note_to_split,
@@ -309,19 +424,19 @@ live_score.Measure.prototype.split_rest_and_insert_note = function(
 };
 
 /**
-* remove_rest
-*   removes a rest at a given position
+* remove_from_measure
+*   removes a note or rest at a given position
 * args
 *   rest_index
-*     the index of the rest that is being removed
+*     the index of the note/rest that is being removed
 * returns
 *   rest_to_remove
-*     the rest that has been removed 
+*     the note/rest that has been removed 
 */
-live_score.Measure.prototype.remove_rest = function(rest_index){
-  var rest_to_remove = this.notes[rest_index];
-  this.notes.splice(rest_index,1);
-  return rest_to_remove;
+live_score.Measure.prototype.remove_from_measure = function(index){
+  var object_to_remove = this.notes[index];
+  this.notes.splice(index,1);
+  return object_to_remove;
 };
 
 /**
@@ -374,9 +489,9 @@ live_score.Measure.prototype.insert_rests_after_note = function(
   current_position,note_to_split_index,note_info){
  
   var start_position = note_info.quantized_tick_position + 
-    live_score.note_length_to_ticks(note_info.note_length);
+    live_score.note_length_to_ticks(note_info.display_length);
   var end_position = current_position;
-  
+
   var rests = this.fill_space_with_rests(start_position,
     end_position);
   for(var i = rests.length - 1; i >= 0; i--){
@@ -401,7 +516,7 @@ live_score.Measure.prototype.insert_new_note = function(note_to_split_index,
 
   var pitch = live_score.translate_midi_number_to_pitch(note_info.pitch);
   var new_note = new live_score.Note(pitch, note_info.note_length,
-    live_score.note_type);
+    live_score.note_type, note_info.display_length);
   this.notes.splice(note_to_split_index,0,new_note);
 };
 

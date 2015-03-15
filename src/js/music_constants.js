@@ -11,7 +11,7 @@ live_score.note_lengths = {
   "quarter":4,
   "eighth":8,
   "sixteenth":16,
-  "thirty-second":32
+  "thirty_second":32
 };
 
 /**
@@ -158,6 +158,10 @@ live_score.ticks_to_note_length = function(ticks){
     }
   }
   return derived_note_length;
+};
+
+live_score.note_length_greater_than = function(note_length_1,note_length_2){
+  return (note_length_1 < note_length_2);
 };
 
 /**
