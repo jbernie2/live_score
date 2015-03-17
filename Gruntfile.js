@@ -18,6 +18,8 @@ module.exports = function(grunt) {
   var CSS_DIR = 'src/css';
   
   var SOURCES = [ "src/js/*.js" ];
+
+  var ALL_JS = [ "src/js/*.js", "support/*.js" ];
  
 
   grunt.initConfig({
@@ -27,7 +29,7 @@ module.exports = function(grunt) {
         banner: BANNER
       },
       build: {
-        src: SOURCES,
+        src: ALL_JS,
         dest: TARGET_RAW
       }
     },
@@ -51,7 +53,7 @@ module.exports = function(grunt) {
           }
         },
         files: [
-          { src: SOURCES, dest: TARGET_RAW }
+          { src: ALL_JS, dest: TARGET_RAW }
         ]
       }
     },

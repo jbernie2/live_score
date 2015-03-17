@@ -4,6 +4,7 @@ live_score.Ui              = require("./ui.js");
 live_score.Graphical_state = require("./graphical_state.js");
 live_score.Musical_state   = require("./musical_state.js");
 live_score.Renderer        = require("./renderer.js");
+live_score.Midi_player     = require("./midi_player.js");
 
 /**
 * Score_editor
@@ -38,6 +39,11 @@ live_score.Score_editor = function(score_editor_div_id){
   * Converts the musical representation of the score into a vexflow score
   */
   this.renderer = new live_score.Renderer(this.ui.get_score_panel());
+
+  /**
+  * Allows for playback of the notes rendered in the score
+  */
+  this.midi_player = new live_score.Midi_player();
 
   this.create_empty_score();
 };
@@ -141,6 +147,10 @@ live_score.Score_editor.prototype.remove_note = function(event_info){
     this.renderer.display_score();
     this.gs.update(this.renderer);
   }
+};
+
+live_score.Score_editor.prototype.play = function(event_info){
+  this.midi_player.play();
 };
 
 module.exports = live_score.Score_editor;

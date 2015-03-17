@@ -49,6 +49,11 @@ live_score.Ui = function(event_controller, score_editor_div_id){
   */
   this.control_panel = new live_score.Control_panel(this.ui_info);
 
+  /**
+  * the panel that contains all the play back options for the score
+  */
+  this.playback_panel  = new live_score.Playback_panel(event_controller);
+
 };
 
 /**
