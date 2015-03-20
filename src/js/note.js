@@ -137,4 +137,17 @@ live_score.Note.prototype.make_rest = function(){
   this.pitches.push({"pitch":pitch,"length":length,"type":this.type});
 };
 
+live_score.Note.prototype.get_pitches = function(){
+  var pitches = [];
+  for(var i = 0; i < this.pitches.length; i++){
+    pitches.push({
+      "pitch":this.pitches[i].pitch,
+      "length":this.pitches[i].length,
+      "type":this.pitches[i].type,
+      "display_length":this.length
+    });
+  }
+  return pitches;
+};
+
 module.exports = live_score.Note;

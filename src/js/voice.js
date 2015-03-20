@@ -69,4 +69,12 @@ live_score.Voice.prototype.remove_note = function(note_info){
   return this.measures[note_info.measure_num].remove_note(note_info);
 };
 
+live_score.Voice.prototype.get_measures_array = function(){
+  var measures = [];
+  for(var i = 0; i < this.measures.length; i++){
+    measures.push(this.measures[i].get_notes_array());
+  }
+  return measures;
+};
+
 module.exports = live_score.Voice;

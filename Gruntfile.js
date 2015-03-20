@@ -16,11 +16,9 @@ module.exports = function(grunt) {
   
   var HTML_DIR = 'src/html';
   var CSS_DIR = 'src/css';
+  var SUPPORT_DIR = 'support'
   
   var SOURCES = [ "src/js/*.js" ];
-
-  var ALL_JS = [ "src/js/*.js", "support/*.js" ];
- 
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -29,7 +27,7 @@ module.exports = function(grunt) {
         banner: BANNER
       },
       build: {
-        src: ALL_JS,
+        src: SOURCES,
         dest: TARGET_RAW
       }
     },
@@ -53,7 +51,7 @@ module.exports = function(grunt) {
           }
         },
         files: [
-          { src: ALL_JS, dest: TARGET_RAW }
+          { src: SOURCES, dest: TARGET_RAW }
         ]
       }
     },
@@ -89,6 +87,12 @@ module.exports = function(grunt) {
             dest: BUILD_DIR,
             cwd: CSS_DIR,
             src   : ['*.css']
+          },
+          {
+            expand: true,
+            dest: BUILD_DIR,
+            cwd: SUPPORT_DIR,
+            src   : ['*.js','soundfonts/*.js']
           }
         ]
       }

@@ -85,4 +85,12 @@ live_score.Musical_state.prototype.remove_note = function(note_info){
   return this.staves;
 };
 
+live_score.Musical_state.prototype.get_staves_array = function(){
+  var staves = [];
+  for(var i = 0; i < this.staves.length; i++){
+    staves.push(this.staves[i].get_measures_array());
+  }
+  return staves;
+};
+
 module.exports = live_score.Musical_state;

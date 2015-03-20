@@ -740,4 +740,12 @@ live_score.Measure.prototype.find_end_of_rest_sequence = function(rest_index){
   return last_rest_index;
 };
 
+live_score.Measure.prototype.get_notes_array = function(){
+  var notes = [];
+  for(var i = 0; i < this.notes.length; i++){
+    notes.push(this.notes[i].get_pitches());
+  }
+  return notes;
+};
+
 module.exports = live_score.Measure;

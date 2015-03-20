@@ -157,4 +157,8 @@ live_score.Stave.prototype.get_pitch_from_note_position = function(y_position){
   return new_pitch;
 };
 
+live_score.Stave.prototype.get_measures_array = function(){
+  return this.voices[0].get_measures_array();
+};
+
 module.exports = live_score.Stave;

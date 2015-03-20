@@ -183,6 +183,16 @@ live_score.structs.create_ui_info = function(){
   };
 };
 
+live_score.structs.create_midi_note_info = function(){
+  return{
+    channel:0,
+    note_number:0,
+    velocity:0,
+    note_on:0,
+    note_off:0
+  };
+};
+
 /**
 * shallow_copy
 *   creates a shallow copy of a struct

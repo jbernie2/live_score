@@ -150,7 +150,8 @@ live_score.Score_editor.prototype.remove_note = function(event_info){
 };
 
 live_score.Score_editor.prototype.play = function(event_info){
-  this.midi_player.play();
+  var staves = this.ms.get_staves_array();
+  this.midi_player.play(staves);
 };
 
 module.exports = live_score.Score_editor;
