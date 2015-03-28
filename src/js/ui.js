@@ -68,4 +68,8 @@ live_score.Ui.prototype.get_score_panel = function(){
   return this.score_panel.score_canvas;
 };
 
+live_score.Ui.prototype.resize_score_panel = function(spacing_constant){
+  return this.score_panel.resize_score_panel(spacing_constant);
+};
+
 module.exports = live_score.Ui;

@@ -10,6 +10,10 @@ live_score.structs = require("./structs.js");
 *   none
 */
 live_score.Score_panel = function(event_controller, ui_info){
+  this.default_width = 530;
+  
+  this.default_height = 100;
+
   this.event_controller = event_controller;
   this.ui_info = ui_info;
   this.create_score_canvas();
@@ -26,8 +30,8 @@ live_score.Score_panel = function(event_controller, ui_info){
 */
 live_score.Score_panel.prototype.create_score_canvas = function(){  
   this.score_canvas = document.getElementById('score_panel');
-  this.score_canvas.width = 530;
-  this.score_canvas.height = 100;
+  this.score_canvas.width = this.default_width;
+  this.score_canvas.height = this.default_height;
 };
 
 /**
@@ -88,6 +92,19 @@ live_score.Score_panel.prototype.get_click_position = function(){
         event_controller.remove_note(event_info);
       }
    };
+};
+
+
+live_score.Score_panel.prototype.resize_score_panel = function(spacing_constant){
+  var new_score_width = (spacing_constant/10) * 500;
+  var stave_width;
+  if(new_score_width > this.default_width){
+    this.score_canvas.width = new_score_width;
+  }else{
+    this.score_canvas.width = this.default_width;
+  }
+  stave_width = this.score_canvas.width - 30;
+  return stave_width;
 };
 
 module.exports = live_score.Score_panel;

@@ -93,4 +93,22 @@ live_score.Musical_state.prototype.get_staves_array = function(){
   return staves;
 };
 
+
+live_score.Musical_state.prototype.get_num_independent_notes = function(){
+  var max_independent_notes = 0;
+  var staves = this.get_staves_array();
+  for(var i = 0; i < staves.length; i++){
+    var num_independent_notes = 0;
+    var measures = staves[i];
+    for(var j = 0; j < measures.length; j++){
+      var independent_notes = measures[j];
+      num_independent_notes += independent_notes.length;
+    }
+    if(num_independent_notes > max_independent_notes){
+      max_independent_notes = num_independent_notes;
+    }
+  }
+  return max_independent_notes;
+};
+
 module.exports = live_score.Musical_state;

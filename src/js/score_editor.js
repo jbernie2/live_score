@@ -123,6 +123,7 @@ live_score.Score_editor.prototype.add_note = function(event_info){
   var note_info = this.gs.get_new_note_position(event_info);
   if(note_info.valid_input){
     var staves = this.ms.add_note(note_info);
+    this.resize_score();
     this.renderer.render_score(staves);
     this.renderer.display_score();
     this.gs.update(this.renderer);
@@ -143,6 +144,7 @@ live_score.Score_editor.prototype.remove_note = function(event_info){
   var note_info = this.gs.get_note_position(event_info);
   if(note_info.note_found){
     var staves = this.ms.remove_note(note_info);
+    this.resize_score();
     this.renderer.render_score(staves);
     this.renderer.display_score();
     this.gs.update(this.renderer);
@@ -152,6 +154,12 @@ live_score.Score_editor.prototype.remove_note = function(event_info){
 live_score.Score_editor.prototype.play = function(event_info){
   var staves = this.ms.get_staves_array();
   this.midi_player.play(staves);
+};
+
+live_score.Score_editor.prototype.resize_score = function(){
+  var spacing_constant = this.ms.get_num_independent_notes();
+  var score_size = this.ui.resize_score_panel(spacing_constant);
+  this.renderer.resize_score(score_size);
 };
 
 module.exports = live_score.Score_editor;
