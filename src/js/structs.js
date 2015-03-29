@@ -66,12 +66,6 @@ live_score.structs.create_note_info = function(){
     pitch:0,
 
     /**
-    * the x position of the note in the measure as a fraction of the measures
-    * length
-    */
-    x_position:0,
-
-    /**
     * the y position of the note as the distance from the highest possible note
     * in the stave
     */

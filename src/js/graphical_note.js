@@ -72,6 +72,14 @@ live_score.Graphical_note.prototype.extract_note_info = function(note_head){
     getSpacingBetweenLines();
 };
 
+live_score.Graphical_note.prototype.extract_rest_info = function(rest_object,
+  measure_position){
+
+  this.position = measure_position;
+  this.bounds.start_x = rest_object.stem.x_begin;
+  this.bounds.end_x = rest_object.stem.x_end;
+};
+
 /**
 * contains
 *   checks if a set of coordinates is within the bounds of the note
@@ -84,6 +92,10 @@ live_score.Graphical_note.prototype.extract_note_info = function(note_head){
 */
 live_score.Graphical_note.prototype.contains = function(graphical_object){
   return this.bounds.intersects_area(graphical_object);
+};
+
+live_score.Graphical_note.prototype.before = function(graphical_object){
+  return this.bounds.before_area(graphical_object);
 };
 
 /**

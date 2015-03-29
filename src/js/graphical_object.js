@@ -70,4 +70,14 @@ live_score.Graphical_object.prototype.contains_point = function(x,y){
   return contains;
 };
 
+live_score.Graphical_object.prototype.before_area = function(graphical_object){
+  return this.before_point(graphical_object.start_x);
+};
+
+live_score.Graphical_object.prototype.before_point = function(x){
+  var contains = true;
+  contains = contains && (this.start_x < x);
+  return contains;
+};
+
 module.exports = live_score.Graphical_object;

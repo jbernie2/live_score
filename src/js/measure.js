@@ -169,7 +169,7 @@ live_score.Measure.prototype.optimal_length = function(beat_position,num_ticks){
 */
 live_score.Measure.prototype.add_note = function(note_info){
   note_info.quantized_tick_position = this.quantize_position(
-    note_info.quantization,note_info.x_position);
+    note_info.quantization,note_info.tick_position);
 
   note_info.beat_level = this.calculate_beat_level(
     note_info.quantized_tick_position);
@@ -205,24 +205,25 @@ live_score.Measure.prototype.remove_note = function(note_info){
 *   quantized_ticks_position
 *     the quantized position of the note, in ticks
 */
-live_score.Measure.prototype.quantize_position = function(quantization,position){
+live_score.Measure.prototype.quantize_position = function(quantization,
+  tick_position){
   
   var quantized_beat_ticks = live_score.note_length_to_ticks(quantization);
   var num_quantized_beats = this.num_ticks/quantized_beat_ticks;
-  var position_in_ticks = position*this.num_ticks;
+  //var position_in_ticks = position*this.num_ticks;
   var quantized_tick_position;
   var min_tick_difference;
 
   if(num_quantized_beats * quantized_beat_ticks < this.num_ticks){
     quantized_tick_position = num_quantized_beats * quantized_beat_ticks;
-    min_tick_difference = Math.abs(this.num_ticks - position_in_ticks);
+    min_tick_difference = Math.abs(this.num_ticks - tick_position);
   }else{
     quantized_tick_position = 0;
     min_tick_difference = this.num_ticks;
   }
   for(var i = 0; i < num_quantized_beats; i++){
     var ticks_before_beat = i * quantized_beat_ticks;
-    var tick_difference = Math.abs(ticks_before_beat - position_in_ticks);
+    var tick_difference = Math.abs(ticks_before_beat - tick_position);
     if(tick_difference < min_tick_difference){
       min_tick_difference = tick_difference;
       quantized_ticks_position = ticks_before_beat;

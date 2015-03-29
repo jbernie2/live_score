@@ -23,6 +23,12 @@ live_score.Graphical_measure = function(){
   * notes contained in this measure
   */
   this.notes = [];
+
+  this.rests = [];
+
+  this.score_objects = [];
+
+  this.num_ticks = 0;
 };
 
 /**
@@ -49,9 +55,12 @@ live_score.Graphical_measure.prototype.extract_positional_info = function(
     var score_object = measure_contents[i];
     if(this.is_note(score_object)){
       this.add_note(score_object,measure_position);   
+    }else if(this.is_rest(score_object)){
+      this.add_rest(score_object,measure_position);
     }
     measure_position += live_score.note_length_to_ticks(score_object.duration);
-  } 
+  }
+  this.num_ticks = measure_position; 
 };
 
 /**
@@ -96,6 +105,12 @@ live_score.Graphical_measure.prototype.is_note = function(score_object){
           score_object.duration !== "b");
 };
 
+live_score.Graphical_measure.prototype.is_rest = function(score_object){
+  return (score_object.noteType && 
+          score_object.noteType === "r" && 
+          score_object.duration !== "b");
+};
+
 /**
 * add_note
 *   adds a Graphical_note (see Graphical_note.js) to the array of notes 
@@ -120,7 +135,17 @@ live_score.Graphical_measure.prototype.add_note = function(note_object,
     gn.extract_positional_info(note_head,measure_position,pitch);
 
     this.notes.push(gn);
+    this.score_objects.push(gn);
   }
+};
+
+live_score.Graphical_measure.prototype.add_rest = function(rest_object,
+  measure_position){
+
+  var gn = new live_score.Graphical_note();
+  gn.extract_rest_info(rest_object,measure_position);
+  this.rests.push(gn);
+  this.score_objects.push(gn);
 };
 
 /**
@@ -154,7 +179,8 @@ live_score.Graphical_measure.prototype.get_note_info = function(graphical_object
   note_info, is_new_note){
 
   if(is_new_note){
-    note_info.x_position = this.get_measure_position_x(graphical_object);
+    //note_info.x_position = this.get_measure_position_x(graphical_object);
+    note_info.tick_position = this.get_measure_position_x(graphical_object);
   }else{
     var note_found = false;
     for(var i = 0; i < this.notes.length && !note_found; i++){
@@ -181,10 +207,73 @@ live_score.Graphical_measure.prototype.get_note_info = function(graphical_object
 */
 live_score.Graphical_measure.prototype.get_measure_position_x = function(
   graphical_object){
+  
+  /*
   var measure_length = this.bounds.end_x - this.bounds.start_x;
   var position_in_measure = graphical_object.start_x - this.bounds.start_x;
   var fractional_x_position = position_in_measure/measure_length;
   return fractional_x_position;
+  */
+  var previous_note = this.get_closest_note_before_position(graphical_object);
+  var next_note = this.get_closest_note_after_position(graphical_object);
+  var tick_position = this.calculate_tick_position(graphical_object,
+    previous_note,next_note);
+ 
+  return tick_position;
+};
+
+live_score.Graphical_measure.prototype.get_closest_note_before_position = 
+  function(graphical_object){
+  var closest_note;
+  for(var i = 0; i < this.score_objects.length; i++){
+    if(this.score_objects[i].before(graphical_object)){
+      closest_note = this.score_objects[i];
+    }
+  }
+  return closest_note;
+};
+
+live_score.Graphical_measure.prototype.get_closest_note_after_position = 
+  function(graphical_object){
+  var closest_note;
+  var closest_note_found = false;
+  for(var i = 0; i < this.score_objects.length && !closest_note_found; i++){
+    if(!this.score_objects[i].before(graphical_object)){
+      closest_note = this.score_objects[i];
+      closest_note_found = true;
+    }
+  }
+  return closest_note;
+};
+
+live_score.Graphical_measure.prototype.calculate_tick_position = function(
+  graphical_object,previous_note,next_note){
+  
+  if(previous_note === undefined){
+    previous_note = {};
+    previous_note.bounds = {};
+    previous_note.bounds.start_x = this.bounds.start_x;
+    previous_note.position = 0;
+  }
+  if(next_note === undefined){
+    next_note = {};
+    next_note.bounds = {};
+    next_note.bounds.start_x = this.bounds.end_x;
+    next_note.position = this.num_ticks;
+  }
+
+  var prev_note_x_pos = previous_note.bounds.start_x;
+  var next_note_x_pos = next_note.bounds.start_x;
+  var distance_between_adjacent_notes = next_note_x_pos - prev_note_x_pos;
+  var new_note_relative_x_pos = graphical_object.start_x - prev_note_x_pos;
+  var new_note_relative_fractional_x_pos = new_note_relative_x_pos/
+    distance_between_adjacent_notes;
+  var tick_distance_between_notes = next_note.position - 
+    previous_note.position;
+  var new_note_tick_position = previous_note.position + 
+    (tick_distance_between_notes * new_note_relative_fractional_x_pos);
+
+  return new_note_tick_position;
 };
 
 module.exports = live_score.Graphical_measure;
