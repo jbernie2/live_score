@@ -112,19 +112,53 @@ live_score.integer_to_note_table = {
 * a table that converts a note name to its corresponding integer
 */
 live_score.note_to_integer_table = {
-  "C" :0,
-  "C#":1,
-  "D" :2,
-  "D#":3,
-  "E" :4,
-  "F" :5,
-  "F#":6,
-  "G" :7,
-  "G#":8,
-  "A" :9,
-  "A#":10,
-  "B" :11
+  "CBB":10,
+  "CB" :11,
+  "C"  :0,
+  "C#" :1,
+  "C##":2,
+  "DBB":0,
+  "DB" :1,
+  "D"  :2,
+  "D#" :3,
+  "D##":4,
+  "EBB":2,
+  "EB" :3,
+  "E"  :4,
+  "E#" :5,
+  "E##":6,
+  "FBB":3,
+  "FB" :4,
+  "F"  :5,
+  "F#" :6,
+  "F##":7,
+  "GBB":5,
+  "GB" :6,
+  "G"  :7,
+  "G#" :8,
+  "G##":9,
+  "ABB":7,
+  "AB" :8,
+  "A"  :9,
+  "A#" :10,
+  "A##":11,
+  "BBB":9,
+  "BB" :10,
+  "B"  :11,
+  "B#" :0,
+  "B##":1
 };
+
+live_score.keys = {};
+
+live_score.keys.C = {
+  sharps:[1,3,6,8,10],
+  flats:[],
+  double_sharps:[],
+  double_flats:[],
+  naturals:[]
+};
+
 
 /**
 * a constant used by Vexflow to calculate rhythmic positioning
@@ -182,6 +216,28 @@ live_score.ticks_to_note_length = function(ticks){
 live_score.note_length_greater_than = function(note_length_1,note_length_2){
   return (note_length_1 < note_length_2);
 };
+
+live_score.interpret_accidental = function(pitch,key){
+  var midi_num = live_score.note_to_integer_table[pitch.toUpperCase()];
+  var chromatic_note = midi_num % 12;
+  var key_accidentals = live_score.keys[key.toUpperCase()];
+  var accidental = "";
+  if(key_accidentals.sharps.indexOf(chromatic_note) != -1){
+    accidental = "#";
+  }else if(key_accidentals.flats.indexOf(chromatic_note) != -1){
+    accidental = "b";
+  } else if(key_accidentals.double_sharps.indexOf(chromatic_note) != -1){
+    accidental = "##";
+  } else if(key_accidentals.double_flats.indexOf(chromatic_note) != -1){
+    accidental = "bb";
+  } else if(key_accidentals.naturals.indexOf(chromatic_note) != -1){
+    accidental = "n";
+  }else{
+
+  }
+  return accidental;
+};
+
 
 /**
 * set_note_length_lcm

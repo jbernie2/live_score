@@ -14,6 +14,11 @@ live_score.Note    = require("./note.js");
 live_score.Measure = function(measure_meta_data){
 
   /**
+  *
+  */
+  this.key = "C";
+
+  /**
   * the number of beats in the measure, can be thought of as the numerator of
   * the measure's time signature.
   */

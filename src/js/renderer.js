@@ -164,7 +164,8 @@ live_score.Renderer.prototype.render_voices = function(total_num_beats,voices){
 live_score.Renderer.prototype.render_measures = function(measures){
   var vexflow_notes = [];
   for(var i = 0; i < measures.length; i++){
-    vexflow_notes = vexflow_notes.concat(this.render_notes(measures[i].notes));
+    vexflow_notes = vexflow_notes.concat(this.render_notes(measures[i].notes,
+      measures[i].key));
     vexflow_notes.push(new Vex.Flow.BarNote());
   }
   return vexflow_notes;
@@ -180,10 +181,10 @@ live_score.Renderer.prototype.render_measures = function(measures){
 *   vexflow_notes
 *     an array of all the notes played in a measure
 */
-live_score.Renderer.prototype.render_notes = function(notes){
+live_score.Renderer.prototype.render_notes = function(notes,key){
   var vexflow_notes = [];
   for(var i = 0; i < notes.length; i++){
-    vexflow_notes.push(this.create_vexflow_note(notes[i])); 
+    vexflow_notes.push(this.create_vexflow_note(notes[i],key)); 
   }
   return vexflow_notes;
 };
@@ -216,8 +217,10 @@ live_score.Renderer.prototype.create_vexflow_voice = function(total_num_beats){
 *   vexflow_note
 *     vexflow note with properties parallel to the live_score note, with some
 *     exceptions for notes that overlap notes.
+*   key
+*     the musical key of the measure containing the notes
 */
-live_score.Renderer.prototype.create_vexflow_note = function(note){
+live_score.Renderer.prototype.create_vexflow_note = function(note,key){
   var length = note.length.toString();
   if(note.type === live_score.rest_type){
     length += live_score.rest_type;
@@ -229,7 +232,19 @@ live_score.Renderer.prototype.create_vexflow_note = function(note){
   }
 
   var vexflow_note = new Vex.Flow.StaveNote({keys:pitches,duration:length});
+  this.add_accidentals(vexflow_note,key);
+
   return vexflow_note;
+};
+
+live_score.Renderer.prototype.add_accidentals = function(vexflow_note,key){
+  for(var i = 0; i < vexflow_note.keyProps.length; i++){
+    var pitch = vexflow_note.keyProps[i].key;
+    var accidental = live_score.interpret_accidental(pitch,key);
+    if(accidental !== ""){
+      vexflow_note.addAccidental(i,new Vex.Flow.Accidental(accidental));
+    }
+  }
 };
 
 /**
