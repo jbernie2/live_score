@@ -187,6 +187,17 @@ live_score.structs.create_midi_note_info = function(){
   };
 };
 
+live_score.structs.create_key_info = function(){
+  return{
+    key:"",
+    sharps:[],
+    flats:[],
+    naturals:[],
+    double_sharps:[],
+    double_flats:[]
+  };
+};
+
 /**
 * shallow_copy
 *   creates a shallow copy of a struct

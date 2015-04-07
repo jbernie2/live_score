@@ -164,8 +164,10 @@ live_score.Renderer.prototype.render_voices = function(total_num_beats,voices){
 live_score.Renderer.prototype.render_measures = function(measures){
   var vexflow_notes = [];
   for(var i = 0; i < measures.length; i++){
+    var key = measures[i].key.toUpperCase();
+    var key_signature = live_score.keys[key]();
     vexflow_notes = vexflow_notes.concat(this.render_notes(measures[i].notes,
-      measures[i].key));
+      key_signature));
     vexflow_notes.push(new Vex.Flow.BarNote());
   }
   return vexflow_notes;
@@ -181,10 +183,10 @@ live_score.Renderer.prototype.render_measures = function(measures){
 *   vexflow_notes
 *     an array of all the notes played in a measure
 */
-live_score.Renderer.prototype.render_notes = function(notes,key){
+live_score.Renderer.prototype.render_notes = function(notes,key_signature){
   var vexflow_notes = [];
   for(var i = 0; i < notes.length; i++){
-    vexflow_notes.push(this.create_vexflow_note(notes[i],key)); 
+    vexflow_notes.push(this.create_vexflow_note(notes[i],key_signature)); 
   }
   return vexflow_notes;
 };
@@ -232,7 +234,10 @@ live_score.Renderer.prototype.create_vexflow_note = function(note,key){
   }
 
   var vexflow_note = new Vex.Flow.StaveNote({keys:pitches,duration:length});
-  this.add_accidentals(vexflow_note,key);
+  
+  if(note.type === live_score.note_type){
+    this.add_accidentals(vexflow_note,key);
+  }
 
   return vexflow_note;
 };

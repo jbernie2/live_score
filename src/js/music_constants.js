@@ -151,12 +151,15 @@ live_score.note_to_integer_table = {
 
 live_score.keys = {};
 
-live_score.keys.C = {
-  sharps:[1,3,6,8,10],
-  flats:[],
-  double_sharps:[],
-  double_flats:[],
-  naturals:[]
+live_score.keys.C = function(){
+  return {
+    key:"C",
+    sharps:[1,3,6,8,10],
+    flats:[],
+    double_sharps:[],
+    double_flats:[],
+    naturals:[]
+  };
 };
 
 
@@ -217,27 +220,62 @@ live_score.note_length_greater_than = function(note_length_1,note_length_2){
   return (note_length_1 < note_length_2);
 };
 
-live_score.interpret_accidental = function(pitch,key){
+live_score.interpret_accidental = function(pitch,key_signature){
   var midi_num = live_score.note_to_integer_table[pitch.toUpperCase()];
   var chromatic_note = midi_num % 12;
-  var key_accidentals = live_score.keys[key.toUpperCase()];
   var accidental = "";
-  if(key_accidentals.sharps.indexOf(chromatic_note) != -1){
+  if(key_signature.sharps.indexOf(chromatic_note) != -1){
     accidental = "#";
-  }else if(key_accidentals.flats.indexOf(chromatic_note) != -1){
+    live_score.update_sharps(chromatic_note,key_signature);
+  }else if(key_signature.flats.indexOf(chromatic_note) != -1){
     accidental = "b";
-  } else if(key_accidentals.double_sharps.indexOf(chromatic_note) != -1){
+    live_score.update_flats(chromatic_note,key_signature);
+  } else if(key_signature.double_sharps.indexOf(chromatic_note) != -1){
     accidental = "##";
-  } else if(key_accidentals.double_flats.indexOf(chromatic_note) != -1){
+  } else if(key_signature.double_flats.indexOf(chromatic_note) != -1){
     accidental = "bb";
-  } else if(key_accidentals.naturals.indexOf(chromatic_note) != -1){
+  } else if(key_signature.naturals.indexOf(chromatic_note) != -1){
     accidental = "n";
-  }else{
-
+    live_score.update_naturals(chromatic_note,key_signature);
   }
+
   return accidental;
 };
 
+live_score.update_sharps = function(chromatic_note,key_signature){
+   live_score.remove_accidental(chromatic_note,key_signature.sharps);
+   var natural = ((chromatic_note - 1) + 12) % 12;
+   key_signature.naturals.push(natural);
+};
+
+live_score.update_flats = function(chromatic_note,key_signature){
+  live_score.remove_accidental(chromatic_note,key_signature.flats);
+  var natural = (chromatic_note + 1) % 12;
+  key_signature.naturals.push(natural);
+};
+
+live_score.update_naturals = function(chromatic_note,key_signature){
+  live_score.remove_accidental(chromatic_note,key_signature.naturals);
+  var original_key_sig = live_score.keys[key_signature.key.toUpperCase()]();
+  var sharp = (chromatic_note + 1) % 12;
+  var flat = ((chromatic_note - 1) + 12) % 12;
+  if(original_key_sig.sharps.indexOf(sharp) != -1){
+    key_signature.sharps.push(sharp);
+  }
+  if(original_key_sig.sharps.indexOf(flat) != -1){
+    key_signature.flats.push(flat);
+  }
+};
+
+live_score.remove_accidental = function(chromatic_note,accidental_list){
+  var accidental_removed = false;
+  var index = accidental_list.indexOf(chromatic_note);
+  if(index > -1){
+    accidental_list.splice(index,1);
+    accidental_removed = true;
+  }
+  return accidental_removed;
+};
 
 /**
 * set_note_length_lcm
