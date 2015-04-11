@@ -151,6 +151,16 @@ live_score.Score_editor.prototype.remove_note = function(event_info){
   }
 };
 
+live_score.Score_editor.prototype.update_note_popup = function(event_info){
+  
+  var note_info;
+  if(event_info.mouse_on_score){
+    note_info = this.gs.get_new_note_position(event_info);
+    note_info.pitch = this.ms.get_pitch_from_note_position(note_info);
+  }
+  this.ui.update_note_popup(event_info,note_info);
+};
+
 live_score.Score_editor.prototype.play = function(event_info){
   var staves = this.ms.get_staves_array();
   this.midi_player.play(staves);

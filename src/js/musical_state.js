@@ -111,4 +111,11 @@ live_score.Musical_state.prototype.get_num_independent_notes = function(){
   return max_independent_notes;
 };
 
+live_score.Musical_state.prototype.get_pitch_from_note_position = function(
+  note_info){
+  var stave_num = note_info.stave_num;
+  var y_position = note_info.y_position;
+  return this.staves[stave_num].get_pitch_from_note_position(y_position);
+};
+
 module.exports = live_score.Musical_state;

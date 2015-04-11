@@ -147,6 +147,12 @@ live_score.structs.create_event_info = function(){
     * the beat level to which the note will be quantized before being inserted
     */
     quantization:0,
+
+    /**
+    *
+    */
+    mouse_on_score:0
+
   };
 };
 

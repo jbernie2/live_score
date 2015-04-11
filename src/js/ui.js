@@ -2,6 +2,7 @@ live_score = require("./live_score.js");
 live_score.structs = require("./structs.js");
 live_score.Score_panel = require("./score_panel.js");
 live_score.Control_panel = require("./control_panel.js");
+live_score.Note_popup = require("./note_popup.js");
 
 /**
 * Ui
@@ -54,6 +55,10 @@ live_score.Ui = function(event_controller, score_editor_div_id){
   */
   this.playback_panel  = new live_score.Playback_panel(event_controller);
 
+  /**
+  *
+  */
+  this.note_popup = new live_score.Note_popup();
 };
 
 /**
@@ -70,6 +75,10 @@ live_score.Ui.prototype.get_score_panel = function(){
 
 live_score.Ui.prototype.resize_score_panel = function(spacing_constant){
   return this.score_panel.resize_score_panel(spacing_constant);
+};
+
+live_score.Ui.prototype.update_note_popup = function(event_info, note_info){
+  this.note_popup.update(event_info, note_info);
 };
 
 module.exports = live_score.Ui;
