@@ -149,8 +149,14 @@ live_score.note_to_integer_table = {
   "B##":1
 };
 
+/**
+* a object that defines key signatures
+*/
 live_score.keys = {};
 
+/**
+* defines the accidentals found in the key of C major
+*/
 live_score.keys.C = function(){
   return {
     key:"C",
@@ -161,7 +167,6 @@ live_score.keys.C = function(){
     naturals:[]
   };
 };
-
 
 /**
 * a constant used by Vexflow to calculate rhythmic positioning
@@ -220,6 +225,19 @@ live_score.note_length_greater_than = function(note_length_1,note_length_2){
   return (note_length_1 < note_length_2);
 };
 
+/**
+* interpret_accidental
+*   based on the key signature and previous accidentals in the measure,
+*   determines the appropriate accidental for a note
+* args
+*   pitch
+*     the pitch name of the note
+*   key_signature
+*     an struct (see structs.js) describing the current key
+* returns
+*   accidental
+*     a string with the accidental to be added to the note
+*/
 live_score.interpret_accidental = function(pitch,key_signature){
   var midi_num = live_score.note_to_integer_table[pitch.toUpperCase()];
   var chromatic_note = midi_num % 12;
@@ -242,18 +260,60 @@ live_score.interpret_accidental = function(pitch,key_signature){
   return accidental;
 };
 
+/**
+* update_sharps
+*   updates the sharps that are used in the key signature for this measure
+*   (a sharped note that follows another sharped note does not need a sharp
+*   if the note is within the same measure and no other accidentals have 
+*   been used for that pitch)
+* args
+*   chromatic_note
+*     the note (0 - 11) that was given a sharp
+*   key_signature
+*     an struct (see structs.js) describing the current key     
+* returns
+*   none
+*/
 live_score.update_sharps = function(chromatic_note,key_signature){
    live_score.remove_accidental(chromatic_note,key_signature.sharps);
    var natural = ((chromatic_note - 1) + 12) % 12;
    key_signature.naturals.push(natural);
 };
 
+/**
+* update_flats
+*   updates the flats that are used in the key signature for this measure
+*   (a flatted note that follows another flatted note does not need a flat
+*   if the note is within the same measure and no other accidentals have 
+*   been used for that pitch)
+* args
+*   chromatic_note
+*     the note (0 - 11) that was given a flat
+*   key_signature
+*     an struct (see structs.js) describing the current key     
+* returns
+*   none
+*/
 live_score.update_flats = function(chromatic_note,key_signature){
   live_score.remove_accidental(chromatic_note,key_signature.flats);
   var natural = (chromatic_note + 1) % 12;
   key_signature.naturals.push(natural);
 };
 
+/**
+* update_naturals
+*   updates the naturals that are used in the key signature for this measure
+*   (a note that follows an altered note must be given a natural if the note
+*   is intended to note used the accidental used by the previous note of the
+*   same pitch that was given an accidental)
+* args
+*   chromatic_note
+*     the note (0 - 11) that was given a natural
+*   key_signature
+*     an struct (see structs.js) describing the current key     
+* returns
+*   none
+*/
 live_score.update_naturals = function(chromatic_note,key_signature){
   live_score.remove_accidental(chromatic_note,key_signature.naturals);
   var original_key_sig = live_score.keys[key_signature.key.toUpperCase()]();
@@ -267,6 +327,18 @@ live_score.update_naturals = function(chromatic_note,key_signature){
   }
 };
 
+/**
+* remove_accidental
+*   removes an accidental from a key signature
+* args
+*   chromatic_note
+*     the note (0 - 11) that was given a flat
+*   accidental_list
+*     an array of a type of accidental used in the key
+* returns
+*   accidental_removed
+*     a boolean denoting whether the accidental was removed successfully
+*/
 live_score.remove_accidental = function(chromatic_note,accidental_list){
   var accidental_removed = false;
   var index = accidental_list.indexOf(chromatic_note);

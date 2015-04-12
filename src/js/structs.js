@@ -149,7 +149,8 @@ live_score.structs.create_event_info = function(){
     quantization:0,
 
     /**
-    *
+    * a boolean denoting whether the mouse is currently within the bounds of the 
+    * score
     */
     mouse_on_score:0
 
@@ -183,23 +184,83 @@ live_score.structs.create_ui_info = function(){
   };
 };
 
+/**
+* create_midi_note_info
+*   creates a midi_note_info struct, contains information about how to play a
+*   midi note
+* args
+*   none
+* returns
+*   a midi_note_info struct
+*/
 live_score.structs.create_midi_note_info = function(){
   return{
+    /**
+    * the midi channel on which to play the note
+    */
     channel:0,
+
+    /**
+    * the midi number of the note
+    */
     note_number:0,
+
+    /**
+    * the intensity with which the note will be played
+    */
     velocity:0,
+
+    /**
+    * the time when the note starts playing
+    */
     note_on:0,
+
+    /**
+    * the time when the note stops playing
+    */
     note_off:0
   };
 };
 
+/**
+* create_key_info
+*   creates a key_info struct, contains information about a key signature
+* args
+*   none
+* returns
+*   a key_info struct
+*/
 live_score.structs.create_key_info = function(){
   return{
+
+    /**
+    * the name of the key
+    */
     key:"",
+
+    /**
+    * an array of notes needing sharps in the key
+    */
     sharps:[],
+
+    /**
+    * an array of notes needing flatss in the key
+    */
     flats:[],
+    
+    /**
+    * an array of notes needing naturals in the key
+    */
     naturals:[],
+
+    /**
+    * an array of notes needing double sharps in the key
+    */
     double_sharps:[],
+    
+    /**
+    * an array of notes needing double flats in the key
+    */
     double_flats:[]
   };
 };

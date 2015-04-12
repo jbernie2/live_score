@@ -151,6 +151,15 @@ live_score.Score_editor.prototype.remove_note = function(event_info){
   }
 };
 
+/**
+* update_note_popup
+*   update the information displayed in the note popup div based on used action
+* args
+*   event_info
+*     a struct (see structs.js) containing information about a ui event
+* returns
+*   none
+*/
 live_score.Score_editor.prototype.update_note_popup = function(event_info){
   
   var note_info;
@@ -161,11 +170,28 @@ live_score.Score_editor.prototype.update_note_popup = function(event_info){
   this.ui.update_note_popup(event_info,note_info);
 };
 
+/**
+* play
+*   play the contents of the score as midi
+* args
+*   event_info
+*     a struct (see structs.js) containing information about a ui event
+* returns
+*   none
+*/
 live_score.Score_editor.prototype.play = function(event_info){
   var staves = this.ms.get_staves_array();
   this.midi_player.play(staves);
 };
 
+/**
+* resize_score
+*   change the size of the score based on the number of notes in the score
+* args
+*   none
+* returns
+*   none
+*/
 live_score.Score_editor.prototype.resize_score = function(){
   var spacing_constant = this.ms.get_num_independent_notes();
   var score_size = this.ui.resize_score_panel(spacing_constant);

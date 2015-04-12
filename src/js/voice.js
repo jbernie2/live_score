@@ -69,6 +69,14 @@ live_score.Voice.prototype.remove_note = function(note_info){
   return this.measures[note_info.measure_num].remove_note(note_info);
 };
 
+/**
+* get_measures_array
+*   gets the notes played by this voice, used for midi playback
+* args
+*   none
+* returns
+*   an array of notes played in this voice
+*/
 live_score.Voice.prototype.get_measures_array = function(){
   var measures = [];
   for(var i = 0; i < this.measures.length; i++){

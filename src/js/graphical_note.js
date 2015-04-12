@@ -72,6 +72,16 @@ live_score.Graphical_note.prototype.extract_note_info = function(note_head){
     getSpacingBetweenLines();
 };
 
+/**
+* extract_rest_info
+*   extracts positional data from the vexflow rest object
+* args
+*   rest_object
+*     the vexflow object containing the graphical positioning information of
+*     a rest
+* returns
+*   none
+*/
 live_score.Graphical_note.prototype.extract_rest_info = function(rest_object,
   measure_position){
 
@@ -94,6 +104,16 @@ live_score.Graphical_note.prototype.contains = function(graphical_object){
   return this.bounds.intersects_area(graphical_object);
 };
 
+/**
+* contains
+*   checks if a set of coordinates occurrs before this object in the score
+* args
+*   graphical_object
+*     a Graphical_object (see graphical_object.js) containing coordinates
+* returns
+*   a boolean of whether the area described by graphical_object starts before
+*   this object
+*/
 live_score.Graphical_note.prototype.before = function(graphical_object){
   return this.bounds.before_area(graphical_object);
 };

@@ -47,7 +47,7 @@ live_score.Renderer = function(score_panel){
   this.vexflow_voices_list = [];
 
   /**
-  *
+  * the current size of the score
   */
   this.stave_size = 500;
 };
@@ -65,6 +65,15 @@ live_score.Renderer.prototype.clear_score = function(){
     this.score_panel.height);
 };
 
+/**
+* resize_score
+*   changes the size of the score
+* args
+*   stave_size
+*     the new score size
+* returns
+*   none
+*/
 live_score.Renderer.prototype.resize_score = function(stave_size){
   this.stave_size = stave_size;
 };
@@ -179,6 +188,8 @@ live_score.Renderer.prototype.render_measures = function(measures){
 * args
 *   notes
 *     an array of live_score notes
+*   key_signature
+*     the key signature of the current measure
 * returns
 *   vexflow_notes
 *     an array of all the notes played in a measure
@@ -242,6 +253,17 @@ live_score.Renderer.prototype.create_vexflow_note = function(note,key){
   return vexflow_note;
 };
 
+/**
+* add_accidentals
+*   adds accidentals to notes before they are inserted into the score
+* args
+*   vexflow_note
+*     the vexflow note object
+*   key
+*     the key signature of the current measure
+* returns
+*   none
+*/
 live_score.Renderer.prototype.add_accidentals = function(vexflow_note,key){
   for(var i = 0; i < vexflow_note.keyProps.length; i++){
     var pitch = vexflow_note.keyProps[i].key;

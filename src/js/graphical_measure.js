@@ -24,10 +24,20 @@ live_score.Graphical_measure = function(){
   */
   this.notes = [];
 
+   /**
+  * an array of Graphical_note objects (see graphical_note.js) representing the
+  * rests contained in this measure
+  */
   this.rests = [];
 
+  /**
+  * The union of the notes and rests arrays
+  */
   this.score_objects = [];
 
+  /**
+  * The number of ticks in this measure as defined by live_score.RESOLUTION
+  */
   this.num_ticks = 0;
 };
 
@@ -105,6 +115,15 @@ live_score.Graphical_measure.prototype.is_note = function(score_object){
           score_object.duration !== "b");
 };
 
+/**
+* is_rest
+*   checks if a given score_object is a rest
+* args
+*   score_object
+*     an object, created by Vexflow that is displayed in the score
+* returns
+*   a boolean value denoting whether the score_object is a rest
+*/
 live_score.Graphical_measure.prototype.is_rest = function(score_object){
   return (score_object.noteType && 
           score_object.noteType === "r" && 
@@ -139,6 +158,18 @@ live_score.Graphical_measure.prototype.add_note = function(note_object,
   }
 };
 
+/**
+* add_note
+*   adds a rest (see Graphical_note.js) to the array of rests
+*   contained within the measure
+* args
+*   rest_object
+*     an object, created by Vexflow that is displayed in the score
+*   measure_position
+*     the starting position of the rest being added (in ticks)
+* returns
+*   none
+*/
 live_score.Graphical_measure.prototype.add_rest = function(rest_object,
   measure_position){
 
@@ -222,6 +253,17 @@ live_score.Graphical_measure.prototype.get_measure_position_x = function(
   return tick_position;
 };
 
+/**
+* get_closest_note_before_position
+*   finds the closest score object (note or rest), that appears in the score
+*   prior to the point described by the graphical_object
+* args
+*   graphical_object
+*     an object describing a point on the score (see graphical_object.js)
+* returns
+*   the graphical_object of the score object immediately preceding the
+*   graphical_object passed in
+*/
 live_score.Graphical_measure.prototype.get_closest_note_before_position = 
   function(graphical_object){
   var closest_note;
@@ -233,6 +275,17 @@ live_score.Graphical_measure.prototype.get_closest_note_before_position =
   return closest_note;
 };
 
+/**
+* get_closest_note_after_position
+*   finds the closest score object (note or rest), that appears in the score
+*   after the point described by the graphical_object
+* args
+*   graphical_object
+*     an object describing a point on the score (see graphical_object.js)
+* returns
+*   the graphical_object of the score object immediately following the 
+*   graphical_object passed in
+*/
 live_score.Graphical_measure.prototype.get_closest_note_after_position = 
   function(graphical_object){
   var closest_note;
@@ -246,6 +299,23 @@ live_score.Graphical_measure.prototype.get_closest_note_after_position =
   return closest_note;
 };
 
+/**
+* calculate_tick_position
+*   given a position and the notes directly preceding and following that
+*   position, calculates the tick position in the measure of the position
+* args
+*   graphical_object
+*     an object describing a point on the score (see graphical_object.js)
+*   previous_note
+*     the score object that immediately preceeds graphical_object in the
+*     measure
+*   next_note
+*     the score object that immediately follows graphical_object in the
+*     measure
+* returns
+*   new_note_tick_position
+*     the position (in ticks) of the note being inserted into the measure
+*/
 live_score.Graphical_measure.prototype.calculate_tick_position = function(
   graphical_object,previous_note,next_note){
   

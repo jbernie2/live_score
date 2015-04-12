@@ -56,7 +56,8 @@ live_score.Ui = function(event_controller, score_editor_div_id){
   this.playback_panel  = new live_score.Playback_panel(event_controller);
 
   /**
-  *
+  * a div showing the pitch of the note that would be inserted based on the
+  * the user's mouse position
   */
   this.note_popup = new live_score.Note_popup();
 };
@@ -73,10 +74,32 @@ live_score.Ui.prototype.get_score_panel = function(){
   return this.score_panel.score_canvas;
 };
 
+/**
+* resize_score_panel
+*   resizes the score panel
+* args
+*   spacing_constant
+*     a constant, based on the number of notes in the score, used to determine
+*     the new score size
+* returns
+*   the new score_panel size
+*/
 live_score.Ui.prototype.resize_score_panel = function(spacing_constant){
   return this.score_panel.resize_score_panel(spacing_constant);
 };
 
+/**
+* update_note_popup
+*   updates the information displayed in the note_popup
+* args
+*   event_info
+*     a struct (see structs.js) with information about the ui event
+*   note_info
+*     a struct (see structs.js) with information about the note being displayed
+*     in the popup
+* returns
+*   none
+*/
 live_score.Ui.prototype.update_note_popup = function(event_info, note_info){
   this.note_popup.update(event_info, note_info);
 };

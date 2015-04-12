@@ -157,6 +157,14 @@ live_score.Stave.prototype.get_pitch_from_note_position = function(y_position){
   return new_pitch;
 };
 
+/**
+* get_measures_array
+*   gets the notes played by this stave, used for midi playback
+* args
+*   none
+* returns
+*   an array of notes played in this stave
+*/
 live_score.Stave.prototype.get_measures_array = function(){
   return this.voices[0].get_measures_array();
 };

@@ -14,8 +14,16 @@ live_score.Score_panel = function(event_controller, ui_info){
   
   this.default_height = 100;
 
+  /**
+  * object that handles all ui events
+  */
   this.event_controller = event_controller;
+
+  /**
+  * shared object used to track the current ui state
+  */
   this.ui_info = ui_info;
+
   this.create_score_canvas();
   this.attach_event_listeners();
 };
@@ -97,6 +105,14 @@ live_score.Score_panel.prototype.get_click_position = function(){
    };
 };
 
+/**
+* update_note_popup
+*   updates the note popup based on mouse movement
+* args
+*   none
+* returns
+*   none
+*/
 live_score.Score_panel.prototype.update_note_popup = function(){
     var score_canvas = this.score_canvas;
     var event_controller = this.event_controller;
@@ -117,6 +133,14 @@ live_score.Score_panel.prototype.update_note_popup = function(){
     };
 };
 
+/**
+* hide_note_popup
+*   hides the note popup based on mouse movement
+* args
+*   none
+* returns
+*   none
+*/
 live_score.Score_panel.prototype.hide_note_popup = function(){
   var event_info = live_score.structs.create_event_info();
   var event_controller = this.event_controller;
@@ -130,7 +154,18 @@ live_score.Score_panel.prototype.hide_note_popup = function(){
   };
 };
 
-live_score.Score_panel.prototype.resize_score_panel = function(spacing_constant){
+/**
+* resize_score_panel
+*   changes the size of the score panel based on the number of notes in the
+*   score
+* args
+*   spacing constant
+*     a constant based on the number of notes in the score
+* returns
+*   the new width of the score
+*/
+live_score.Score_panel.prototype.resize_score_panel = function(
+  spacing_constant){
   var new_score_width = (spacing_constant/10) * 500;
   var stave_width;
   if(new_score_width > this.default_width){

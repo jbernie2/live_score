@@ -70,14 +70,33 @@ live_score.Graphical_object.prototype.contains_point = function(x,y){
   return contains;
 };
 
+/**
+* before_area
+*   determines if this graphical_object starts before a given area
+* args
+*   graphical_object
+*     the area being compared to this area
+* returns
+*   a boolean denoting whether this object occurs before the object passed in
+*/
 live_score.Graphical_object.prototype.before_area = function(graphical_object){
   return this.before_point(graphical_object.start_x);
 };
 
+/**
+* before_point
+*   determines if this graphical_object starts before a given area
+* args
+*   x
+*     the point's x coordinate
+* returns
+*   before
+*     either true or false, whehter this graphical_object is before the point
+*/
 live_score.Graphical_object.prototype.before_point = function(x){
-  var contains = true;
-  contains = contains && (this.start_x < x);
-  return contains;
+  var before = true;
+  before = before && (this.start_x < x);
+  return before;
 };
 
 module.exports = live_score.Graphical_object;

@@ -137,6 +137,15 @@ live_score.Note.prototype.make_rest = function(){
   this.pitches.push({"pitch":pitch,"length":length,"type":this.type});
 };
 
+/**
+* get_pitches
+*   creates an array of altered note structs to be used to play midi
+* args
+*   none
+* returns
+*   pitches
+*     an array of the pitches in this object formatted for easy midi playback
+*/
 live_score.Note.prototype.get_pitches = function(){
   var pitches = [];
   for(var i = 0; i < this.pitches.length; i++){

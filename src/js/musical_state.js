@@ -85,6 +85,15 @@ live_score.Musical_state.prototype.remove_note = function(note_info){
   return this.staves;
 };
 
+/**
+* get_staves_array
+*   returns an array of the notes that are in each stave
+* args
+*   none
+* returns
+*   staves
+*     an array of the notes that are in each stave
+*/
 live_score.Musical_state.prototype.get_staves_array = function(){
   var staves = [];
   for(var i = 0; i < this.staves.length; i++){
@@ -93,7 +102,17 @@ live_score.Musical_state.prototype.get_staves_array = function(){
   return staves;
 };
 
-
+/**
+* get_num_independent_notes
+*   retrieves the number of musical objects that occur in a unique time
+*   slice from the stave with the most uniquely placed object. This is used to
+*   resize the score as the number of objects changes 
+* args
+*   none
+* returns
+*   max_independent_notes
+*     The maximum number of uniquely placed musical objects from any one stave
+*/
 live_score.Musical_state.prototype.get_num_independent_notes = function(){
   var max_independent_notes = 0;
   var staves = this.get_staves_array();
@@ -111,6 +130,15 @@ live_score.Musical_state.prototype.get_num_independent_notes = function(){
   return max_independent_notes;
 };
 
+/**
+* get_pitch_from_note_position
+*   find the pitch of a note based on its y position
+* args
+*   note_info
+*     a struct (see structs.js) with information about a musical note
+* returns
+*   The midi number pitch of the note 
+*/
 live_score.Musical_state.prototype.get_pitch_from_note_position = function(
   note_info){
   var stave_num = note_info.stave_num;

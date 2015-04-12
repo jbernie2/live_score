@@ -14,7 +14,8 @@ live_score.Note    = require("./note.js");
 live_score.Measure = function(measure_meta_data){
 
   /**
-  *
+  * The key of this measure
+  * TODO: make this user settable
   */
   this.key = "C";
 
@@ -121,6 +122,17 @@ live_score.Measure.prototype.calculate_beat_level = function(total_ticks){
   return beat_level;
 };
 
+/**
+* calculate_position_from_index
+*   given a the index of an object measure's array, calculates the tick
+*   position of that object
+* args
+*   index
+*     the index of the object in this.notes;
+* returns
+*   position
+*     the position, in ticks, of the object
+*/
 live_score.Measure.prototype.calculate_position_from_index = function(index){
   var position = 0;
   for(var i = 0; i < index; i++){
@@ -746,6 +758,16 @@ live_score.Measure.prototype.find_end_of_rest_sequence = function(rest_index){
   return last_rest_index;
 };
 
+/**
+* get_notes_array
+*   gets an array of all the note objects in this measure, used for playing
+*   midi 
+* args
+*   none
+* returns
+*   notes
+*     an array of all the note objects in this measure
+*/
 live_score.Measure.prototype.get_notes_array = function(){
   var notes = [];
   for(var i = 0; i < this.notes.length; i++){
