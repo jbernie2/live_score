@@ -1,4 +1,4 @@
-# live_score v0.3.0
+# live_score v0.4.0
 
 An interactive score editor in javascript.
 
