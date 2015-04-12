@@ -7,7 +7,8 @@ An interactive score editor in javascript.
 live_score is an interactive score editor written entirely in javascript.
 live_score allows for score creation, editing, and playback right in
 you browser. live_score is based on the [VexFlow](http://vexflow.com) music notation
-rendering API. A demo of the current version of live_score is available [here](http://jbernie2.github.io)
+rendering API and uses [MIDI.js](https://github.com/mudcube/MIDI.js/) for Midi playback
+A demo of the current version of live_score is available [here](http://jbernie2.github.io)
 
 ## Version 1.0.0 Planned Features
   1. Allow for addition of notes to score
