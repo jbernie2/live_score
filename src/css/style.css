@@ -23,7 +23,21 @@ a {
   height:200px;
 }
 
-#cursor_panel{
+/*
+#middle_panel {
+  position:relative;
+}
+
+#playback_panel {
+  position:absolute;
+  top:50%;
+  height:10em;
+  margin-top:-5em;
+  text-align:center;
+}
+*/
+
+#cursor_panel {
 
 }
 
