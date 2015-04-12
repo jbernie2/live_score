@@ -14,7 +14,10 @@ live_score.Midi_player.prototype.play = function(staves){
   MIDI.loadPlugin({
     soundfontUrl: "./soundfont/",
     instrument: "acoustic_grand_piano",
-    callback: function() {
+ 		onprogress: function(state, progress) {
+			console.log(state, progress);
+		}, 
+    onsuccess: function() {
       for(var i = 0; i < note_list.length; i++){
         var note = note_list[i];
         MIDI.setVolume(note.channel,note.velocity);
