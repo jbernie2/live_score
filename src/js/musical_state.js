@@ -130,6 +130,11 @@ live_score.Musical_state.prototype.get_num_independent_notes = function(){
   return max_independent_notes;
 };
 
+live_score.Musical_state.prototype.get_num_measures = function(){
+  var staves = this.get_staves_array();
+  return staves[0].length;
+};
+
 /**
 * get_pitch_from_note_position
 *   find the pitch of a note based on its y position

@@ -64,7 +64,7 @@ live_score.Score_editor.prototype.create_empty_score = function(){
 
   this.ms.add_staves(num_staves,stave_info);
   
-  var num_measures = 4;
+  var num_measures = 8;
   var measure_info = live_score.structs.create_measure_info();
   measure_info.num_beats = 4;
   measure_info.beat_value = 4;
@@ -194,6 +194,7 @@ live_score.Score_editor.prototype.play = function(event_info){
 */
 live_score.Score_editor.prototype.resize_score = function(){
   var spacing_constant = this.ms.get_num_independent_notes();
+  spacing_constant += this.ms.get_num_measures();
   var score_size = this.ui.resize_score_panel(spacing_constant);
   this.renderer.resize_score(score_size);
 };
