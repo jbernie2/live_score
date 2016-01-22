@@ -43,5 +43,8 @@ Running Locally
 
     Open build/index.html in your browser
 
+## License
+MIT License
+
 Copyright (c) John Bernier 2015 <br/>
 <john.b.bernier@gmail.com>
